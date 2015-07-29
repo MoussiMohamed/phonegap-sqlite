@@ -1,0 +1,211 @@
+<html>
+
+
+<head>
+<meta name="viewport"
+	content="initial-scale=1, minimum-scale=1, maximum-scale=1">
+<meta charset="utf-8">
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+html {
+    
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+header {
+    position: relative;
+    margin: 30px auto 0;
+    width: 100%;
+    height: 44px;
+    line-height: 44px;
+}
+
+header button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 44px;
+    font-size: inherit;
+    color: inherit;
+    background: none;
+    cursor: pointer;
+    outline: 0;
+}
+
+header h1 {
+    line-height: inherit;
+    font-size: inherit;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: normal;
+}
+
+
+/* iOS STYLES */
+.ios header {
+    font-family: 'HelveticaNeue', Arial, sans-serif;
+    font-size: 17px;
+    background-color: #f7f7f7;
+    padding: 0 88px;
+    border-bottom: 1px solid #ddd;
+}
+
+.ios header button {
+    color: rgb(21, 125, 251);
+    padding-left: 24px;
+}
+
+.ios header button:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    margin-top: -6px;
+    left: 10px;
+    width: 10px;
+    height: 10px;
+    border: 3px solid rgb(21, 125, 251);
+    border-right: none;
+    border-top: none;
+    -webkit-transform: rotate(45deg);
+       -moz-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
+}
+
+.ios header button:hover {
+    color: rgba(21, 125, 251, 0.3);
+}
+
+.ios header button:hover:before {
+    border-color: rgba(21, 125, 251, 0.3);
+}
+
+.ios header h1 {
+    font-weight: bold;
+    font: -apple-system-headline;
+    line-height: inherit;
+    text-align: center;
+}
+
+
+/* ANDROID STYLES */
+.android header {
+    font-family: 'RobotoRegular', 'Droid Sans', Arial, sans-serif;
+    background-color: #f7f7f7;
+    padding: 0 60px;
+    border-bottom: 2px solid #ddd;
+}
+
+.android header button {
+    padding-left: 10px;
+    width: 54px;
+    background: url(http://upload.wikimedia.org/wikipedia/de/2/27/SmashingLogo.png) no-repeat 15px 4px;
+    background-size: 36px 36px;
+    text-indent: -8000px;
+}
+
+.android header button:hover {
+    background-color: #ddd;
+}
+
+.android header button:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    margin-top: -7px;
+    left: 2px;
+    width: 10px;
+    height: 16px;
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAAAEgAAABIAEbJaz4AAAAJdnBBZwAAACAAAAAgAIf6nJ0AAAGdSURBVEjHpdXfThNBFIDx3+wuSMUKKrGmYKISfAffP/EZBBMuGhoCIRCl/O/ueNG1F3RmoeFcTSZzvvPt2TO7vDDCM04U81WjWRYQ/PBeg+DBT5PHB4rOZHYMFCqlNSOTxYJVR3q0Yq/VLp07TPl2GfDFhlpA8Ns94vMBUc+uujU5NU6l5wEBe3rz9v0S0w0vMunRps9t/crIuZCqnwNE7FnVoHDtIK2fAwQMDE0FUenAbX5eqszu91a5cmaU008bBNHQlqkgaOyrdcQi4P/4zNp35LSr/iIg4Ju3alHp1r4noniUHvV9baWDQ1fd9fNvYRaNJ6NcSL6z4mM7gRuO3Xdf+TKx99fQKhqvVI6XBQS1xlAtaGy4cNWFSBkEE1vW2+/Aa+OuNqYBjTvb7arvxkXeoczsT2y2H5No09h0OUDAtW0B0ZrCSc4hZxDc6Pkwb+WZmzQiB4BLOyqz29FzlG5lHhA8KA3UglrftT8phy4Alz5Za6fyjbFmEdH1CEGtti0qROumzpYDzPrwTk8tqvWduE+JdscTP9cXxz8u5YF32IlaaQAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxMS0wNy0wMVQxMzoxMDoyNS0wNzowMDPfgNMAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTEtMDctMDFUMTM6MTA6MjUtMDc6MDBCgjhvAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAABJRU5ErkJggg==') no-repeat -2px 0;
+    background-size: 17px 17px;
+}
+
+.android header h1 {
+    font-size: 19px;
+    color: #444;
+}
+
+
+/* WINDOWS PHONE STYLES */
+.wp header {
+    font-family: 'Segoe UI', 'Lucida Grande', Verdana, Arial, sans-serif;
+    background-color: #000;
+    height: 70px;
+    color: #fff;
+    line-height: normal;
+    padding-left: 5px;
+}
+
+.wp header button {
+    position: static;
+    height: 25px;
+    line-height: 25px;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.wp header h1 {
+    font-size: 35px;
+    line-height: 32px;
+    text-transform: lowercase;
+}
+      
+    /* following three (cascaded) are equivalent to above three meta viewport statements */
+    /* see http://www.quirksmode.org/blog/archives/2014/05/html5_dev_conf.html */
+    /* see http://dev.w3.org/csswg/css-device-adapt/ */
+        @-ms-viewport { width: 100vw ; min-zoom: 100% ; zoom: 100% ; }          @viewport { width: 100vw ; min-zoom: 100% zoom: 100% ; }
+        @-ms-viewport { user-zoom: fixed ; min-zoom: 100% ; }                   @viewport { user-zoom: fixed ; min-zoom: 100% ; }
+        /*@-ms-viewport { user-zoom: zoom ; min-zoom: 100% ; max-zoom: 200% ; }   @viewport { user-zoom: zoom ; min-zoom: 100% ; max-zoom: 200% ; }*/
+    </style>
+    
+<script charset="utf-8" src="cordova.js" type="text/javascript"></script>
+<title>phonegap</title>
+<link rel = "stylesheet" href="css/bootstrap.min.css">
+
+<script type = "application/javascript" src="js/jquery.js"></script>
+
+</head>
+
+<body >
+	<script>
+		var classes = ['ios'];
+
+var useNextStyle = function() {
+    var nextStyle = classes.shift();
+    classes.push(nextStyle);
+    document.body.className = nextStyle;
+};
+
+useNextStyle();
+
+	</script>
+	<header>
+    <button class="back">Back</button>
+    <h1>Produits</h1>
+    <!-- more actions (e.g. a search button on the right side) -->
+</header>
+
+	<center>
+	<h1 style="color:white;">Nos Produits</h1>
+	<img alt="logo" style="margin-top: 15%" src="img/logo-e-adv.png" width="40%" height="40%" />
+	</center>
+
+</body>
+</html>
