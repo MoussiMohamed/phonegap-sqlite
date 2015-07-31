@@ -8,34 +8,71 @@
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
         <meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-        
-<!--         <link rel="stylesheet" type="text/css" href="css/index.css" /> -->
-        
-          <!-- <script type="text/javascript" src="cordova.js"></script> -->
-          <script type="text/javascript" src="js/contentList.js"></script>
+        <script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script> 
+<!--         <script type="text/javascript" src="js/contentList.js"></script> -->
+        <script type="text/javascript" src="cordova.js"></script>
+         
 <!--         <script type="text/javascript" src="js/index.js"></script> -->
 <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
-<!--      <script type="text/javascript" src="cordova.js"></script> -->
-  <script type="text/javascript" src="js/jquery.js"></script>
-  <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script> 
-   
   <!-- <script type="text/javascript" src="iscroll-master/build/iscroll.js"></script>  -->
-
-    
-        <title>Hello World</title>
-        
-        
+<title>Liste de contenu</title>
     </head>
-  <body onload="getFiles()">
- <ul id="contentList" data-role="listview" data-filter="true" data-filter-placeholder="Search fruits..." data-inset="true">
-    <li><a href="#">Apple</a></li>
-    <li><a href="#">Banana</a></li>
-    <li><a href="#">Cherry</a></li>
-    <li><a href="#">Cranberry</a></li>
-    <li><a href="#">Grape</a></li>
-    <li><a href="#">Orange</a></li>
+  <body>
+ <ul id="contentList" data-role="listview" data-filter="true" data-filter-placeholder="Search content..." data-inset="true">
+    
 </ul>
+<button onclick="downloadFile()"></button>
+<a href="touchPDFJQuery/index.html" target="_top">Show pdf</a>
 
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function () {
+         document.addEventListener("deviceready", onDeviceReady, true); 
+    });
+
+    function onDeviceReady() {
+        
+        var data = {
+				"idProduit" : 22,
+			};
+			$.ajax({ // create an ajax request to load_page.php
+				type : "POST",
+				url : "http://eventek-tn.com/test/E-adv/file-uploading/view.php",
+				dataType : "json", // expect json to be returned
+				data : data,
+				success : function(response) {
+
+					for (var i = 0; i < response.d.length - 1; i++) {
+						$('ul#contentList').append(
+								'<li><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'
+										+ response.d[i].file + '</a></li>');
+					}
+				}
+			});
+    }
+    
+    function previewFile() {
+    	  var preview = document.querySelector('img');
+    	  var file    = document.querySelector('input[type=file]').files[0];
+    	  var reader  = new FileReader();
+
+    	  reader.onloadend = function () {
+    	    preview.src = reader.result;
+    	  }
+
+    	  if (file) {
+    	    reader.readAsDataURL(file);
+    	  } else {
+    	    preview.src = "";
+    	  }
+    	}
+    
+    function downloadFile(){
+    	
+    }
+</script>
+<input type="file" onchange="previewFile()"><br>
+<img src="" height="200" alt="Image preview...">
 </body>
 </html>
 
