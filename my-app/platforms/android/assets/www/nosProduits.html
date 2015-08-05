@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>Nos Produits</title>
+ 
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+     <script type="text/javascript" src="cordova.js"></script>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script> 
+   
+	</head>
+
+	<body>
+		<div>
+			 <div data-role="header">
+  <a href="index.html" class="ui-btn ui-icon-home ui-btn-icon-left">Home</a>
+  <h1>Nos Produits</h1>
+  <a href="#" class="ui-btn ui-icon-info ui-btn-icon-left">A propos</a>
+</div>
+<ul id="contentList" data-role="listview" data-filter="true" data-filter-placeholder="Search content..." data-inset="true">
+
+</ul>
+
+		<script type="text/javascript" charset="utf-8">
+    $(document).ready(function () {
+         document.addEventListener("deviceready", onDeviceReady, true); 
+    });
+
+    function onDeviceReady() {
+        
+			$.ajax({ // create an ajax request to load_page.php
+				type : "POST",
+				url : "http://www.eventek-tn.com/test/E-adv/server/listProduct.php",
+				dataType : "json", // expect json to be returned
+				//data : data,
+				success : function(response) {
+
+					for (var i = 0; i < response.d.length - 1; i++) {
+						$('ul#contentList').append(
+								'<li onclick="doSaveIdPdToShowContent(this)" value="'+response.d[i].id_Produit+'" ><a href="" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'
+										+ response.d[i].nom_Produit + '</a></li>');
+					}
+				}
+			});
+    }
+    
+    function doSaveIdPdToShowContent(idProduit){
+    	sessionStorage.setItem("idProd",idProduit.value);
+    	window.open("choixPres_Article.html","_top");
+    }
+    </script>
+		
+		</div>
+		<div data-role="footer" data-position="fixed" data-fullscreen="true">
+  <h4>&copy; Copyright  by <a href="http://www.interactions.tn/">Interactions</a></h4> 
+  </div>
+	</body>
+</html>

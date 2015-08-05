@@ -18,11 +18,13 @@
  
  <!-- Home -->
  <div data-role="page" id="page1">
-  <div id="header" data-theme="b" data-role="header">
-   <h3>Login</h3>
-  </div>
+  <div data-role="header">
+  <a href="index.html" data-transition="slide" class="ui-btn ui-icon-arrow-l ui-btn-icon-left">Precedent</a>
+  <h1>Page Login</h1>
+  <a href="#" class="ui-btn ui-icon-info ui-btn-icon-left">A propos</a>
+</div>
    <div id="wrapper">
-   <form action="" name="mylogin">
+   <form action="nosProduits.html" name="mylogin">
   <div data-role="content">
    <div class="username" data-role="fieldcontain">
     <label for="username"> Username </label> <input name="username"
@@ -32,9 +34,12 @@
     <label for="psw"> Password </label> <input name="password" id="psw"
      placeholder="enter password" value="" type="text">
    </div>
-    <input id="login" value="Login" type="button" name="Login" onclick="validationcheck();">
+    <input id="login" value="Login" type="submit" name="Login" >
   </div>
   </form>
+  </div>
+  <div data-role="footer" data-position="fixed" data-fullscreen="true">
+  <h4>&copy; Copyright  by <a href="http://www.interactions.tn/">Interactions</a></h4> 
   </div>
  </div>
  

@@ -21,12 +21,29 @@
 </head>
 
 <body >
-	<center>
-	<h1 style="color:white; margin-top: 10%">E-ADV Client</h1>
-	<img alt="logo" src="img/logo-e-adv.png" width="50%" height="30%"/>
-	</center>
-	<center><a href="listProduct.html" style="margin-top: 9%; "  class="btn btn-default">Entrer</a></center>
-	
-	
+	<div data-role="page" id="first" data-theme="b">
+        <div data-role="header" data-theme="a">
+            <h3>Login Page</h3>
+        </div>
+ 
+        <div data-role="content">
+            <form id="check-user" class="ui-body ui-body-a ui-corner-all" data-ajax="false" method="post" action="nosProduits.html">
+                <fieldset>
+                    <div data-role="fieldcontain">
+                        <label for="username">Login:</label>
+                        <input type="text" value="" name="username" id="username"/>
+                    </div>
+                    <div data-role="fieldcontain">                                      
+                        <label for="password">Mot de passe:</label>
+                        <input type="password" value="" name="password" id="password"/> 
+                    </div>
+                    <input type="submit" data-theme="b" name="submit" id="submit" value="Submit">
+                </fieldset>
+            </form>                              
+        </div>
+        <div data-role="footer"> 
+	<h4>Footer content</h4> 
+</div> 
+    </div>
 </body>
 </html>

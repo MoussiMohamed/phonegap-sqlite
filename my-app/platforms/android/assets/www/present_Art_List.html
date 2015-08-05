@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script> 
+<!--         <script type="text/javascript" src="js/contentList.js"></script> -->
+
+        
+        <script type="text/javascript" src="js/download.js"></script>
+         
+<!--         <script type="text/javascript" src="js/index.js"></script> -->
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+  <!-- <script type="text/javascript" src="iscroll-master/build/iscroll.js"></script>  -->
+<title>Liste de contenu</title>
+    </head>
+  <body>
+  	<div id="header" data-theme="b" data-role="header">
+   <h3><script type="text/javascript">sessionStorage.getItem("presentation_article");</script> </h3>
+  </div>
+ <ul id="contentList" data-role="listview" data-filter="true" data-filter-placeholder="Search content..." data-inset="true">
+</ul>
+<button onclick="downloadFile()">Synchroniser les données</button>
+<a href="touchPDFJQuery/index.html" target="_top">voir pdf test</a>
+
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function () {
+         document.addEventListener("deviceready", onDeviceReady, true); 
+    });
+
+    function onDeviceReady() {
+        
+        var data = {
+				"idProduit" : sessionStorage.getItem("idProd"),
+				"ChoixPA" : sessionStorage.getItem("presentation_article"),
+			};
+			$.ajax({ // create an ajax request to load_page.php
+				type : "POST",
+				url : "http://eventek-tn.com/test/E-adv/file-uploading/view.php",
+				dataType : "json", // expect json to be returned
+				data : data,
+				success : function(response) {
+
+					for (var i = 0; i < response.d.length - 1; i++) {
+						$('ul#contentList').append(
+								'<li><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'
+										+ response.d[i].file + '</a></li>');
+					}
+				}
+			});
+    }
+    
+    function previewFile() {
+    	  var preview = document.querySelector('img');
+    	  var file    = document.querySelector('input[type=file]').files[0];
+    	  var reader  = new FileReader();
+
+    	  reader.onloadend = function () {
+    	    preview.src = reader.result;
+    	  }
+
+    	  if (file) {
+    	    reader.readAsDataURL(file);
+    	  } else {
+    	    preview.src = "";
+    	  }
+    	}
+    
+    function downloadFile(){
+    	
+    }
+    function storeIntelligrapeLogo(){
+    	  var url = "http://www.eventek-tn.com/test/E-adv/file-uploading/uploads/77863-interactions-_-offre-technique-projet-e-adv--v-1-0-2.pdf"; // image url
+    	  window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+    	      var imagePath = fs.root.fullPath + "/test.pdf"; // full file path
+    	      var fileTransfer = new FileTransfer();
+    	      fileTransfer.download(url, imagePath, function (entry) {
+    	               console.log(entry.fullPath); // entry is fileEntry object
+    	      }, function (error) {
+    	               console.log("Some error");
+    	      });
+    	   })
+    	}
+</script>
+
+<button id="btnDF" onclick="f()" value="Download">download</button>
+</body>
+</html>
+
