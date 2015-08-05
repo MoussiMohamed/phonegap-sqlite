@@ -4,6 +4,7 @@
         <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="msapplication-tap-highlight" content="no" />
+        <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -60,6 +61,8 @@
   </div>
    <a href="home.html">home Page</a>
   </form>
+  <button id="btnDownFile" value="Get File" onclick="getFile()">Get File</button>
+  <a href="fullExample.html">go to download file</a>
   </div>
  </div>
  
@@ -93,9 +96,30 @@
   function success(){
 	  onDeviceReady();
   }
-  
+  function getFile(){
+	  
+	alert("here");
+var url = 'http://www.eventek-tn.com/test/E-adv/file-uploading/uploads/77863-interactions-_-offre-technique-projet-e-adv--v-1-0-2.pdf';
+   var filePath = 'C:\Users\dev2\sqliteProj\phonegap-sqlite\my-app\platforms\android\assets\www\img';
+   var fileTransfer = new FileTransfer();
+   var uri = encodeURI(url);
+    fileTransfer.download(         uri,         filePath,         function(entry) {
+           console.log("download complete: " + entry.fullPath);
+       },         function(error) {
+           console.log("download error source " + error.source);
+           console.log("download error target " + error.target);
+           console.log("upload error code" + error.code);
+       },         false,         {
+           headers: {
+               "Authorization": "Basic dGVzdHVzZXJuYW1lOnRlc3RwYXNzd29yZA=="             }
+       }
+   );
+
+  }
  
  </script>
+ 
+ 
 
 </body>
 </html>
