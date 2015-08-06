@@ -23,9 +23,11 @@
 <title>Liste de contenu</title>
     </head>
   <body>
-  	<div id="header" data-theme="b" data-role="header">
-   <h3><script type="text/javascript">sessionStorage.getItem("presentation_article");</script> </h3>
-  </div>
+  	<div data-role="header">
+  <a href="choixPres_Article.html" data-transition="slide" class="ui-btn ui-icon-arrow-l ui-btn-icon-left">Precedent</a>
+  <h1 id="typePA"></h1>
+  <a href="#" class="ui-btn ui-icon-info ui-btn-icon-left">A propos</a>
+</div>
  <ul id="contentList" data-role="listview" data-filter="true" data-filter-placeholder="Search content..." data-inset="true">
 </ul>
 <button onclick="downloadFile()">Synchroniser les données</button>
@@ -37,7 +39,8 @@
     });
 
     function onDeviceReady() {
-        
+    	
+        document.getElementById('typePA').innerHTML=sessionStorage.getItem("presentation_article");
         var data = {
 				"idProduit" : sessionStorage.getItem("idProd"),
 				"ChoixPA" : sessionStorage.getItem("presentation_article"),
@@ -92,6 +95,9 @@
 </script>
 
 <button id="btnDF" onclick="f()" value="Download">download</button>
+<div data-role="footer" data-position="fixed" data-fullscreen="true">
+  <h4>&copy; Copyright  by <a href="http://www.interactions.tn/">Interactions</a></h4> 
+  </div>
 </body>
 </html>
 

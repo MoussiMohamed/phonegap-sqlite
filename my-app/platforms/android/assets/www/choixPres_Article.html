@@ -7,12 +7,13 @@
 		Remove this if you use the .htaccess -->
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-		<title>nosProduits</title>
-		<meta name="description" content="">
-		<meta name="author" content="dev2">
+		<title>Choix Presentation/Article</title>
 
 		<meta name="viewport" content="width=device-width; initial-scale=1.0">
-
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+     <script type="text/javascript" src="cordova.js"></script>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script> 
 		<!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
 		<link rel="shortcut icon" href="/favicon.ico">
 		<link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -20,11 +21,19 @@
 
 	<body>
 		 <div data-role="header">
-  <a href="index.html" class="ui-btn ui-icon-home ui-btn-icon-left">Home</a>
-  <h1>Nos Produits</h1>
+  <a href="nosProduits.html" data-transition="slide" class="ui-btn ui-icon-arrow-l ui-btn-icon-left">Precedent</a>
+  <h1 id="choixP"></h1>
   <a href="#" class="ui-btn ui-icon-info ui-btn-icon-left">A propos</a>
 </div>
-		<script type="text/javascript">
+		
+		<script type="text/javascript" charset="utf-8">
+    $(document).ready(function () {
+         document.addEventListener("deviceready", onDeviceReady, true); 
+    });
+
+    function onDeviceReady() {
+    	document.getElementById('choixP').innerHTML=sessionStorage.getItem("choixProduit");
+    }
 			function doVerifyPA(pa) {
 				sessionStorage.setItem("presentation_article",pa);
 				
@@ -36,10 +45,10 @@
 			
 		
 				<div>
-					<button id="btnPresentation" value="presentation" onclick="doVerifyPA('presentation')">
+					<button id="btnPresentation" value="Presentation" onclick="doVerifyPA('Presentation')">
 						Presentations
 					</button>
-					<button id="btnArticle" value="article" onclick="doVerifyPA('article')">
+					<button id="btnArticle" value="Article" onclick="doVerifyPA('Article')">
 						Articles
 					</button>
 					<button id="btnCommentaire" value="commentaire" >

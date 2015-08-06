@@ -9,9 +9,9 @@
  
 <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
      <script type="text/javascript" src="cordova.js"></script>
-  <script type="text/javascript" src="js/jquery.js"></script>
+  
   <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script> 
-   
+   <script type="text/javascript" src="js/jquery.js"></script>
 	</head>
 
 	<body>
@@ -21,6 +21,7 @@
   <h1>Nos Produits</h1>
   <a href="#" class="ui-btn ui-icon-info ui-btn-icon-left">A propos</a>
 </div>
+
 <ul id="contentList" data-role="listview" data-filter="true" data-filter-placeholder="Search content..." data-inset="true">
 
 </ul>
@@ -50,13 +51,78 @@
     
     function doSaveIdPdToShowContent(idProduit){
     	sessionStorage.setItem("idProd",idProduit.value);
+    	
+var child = idProduit.firstChild;
+var childval = child.innerHTML;
+sessionStorage.setItem("choixProduit",childval);
     	window.open("choixPres_Article.html","_top");
     }
+    $( document ).on( "click", ".show-page-loading-msg", function() {
+        var $this = $( this ),
+            theme = $this.jqmData( "theme" ) || $.mobile.loader.prototype.options.theme,
+            msgText = $this.jqmData( "msgtext" ) || $.mobile.loader.prototype.options.text,
+            textVisible = $this.jqmData( "textvisible" ) || $.mobile.loader.prototype.options.textVisible,
+            textonly = !!$this.jqmData( "textonly" );
+            html = $this.jqmData( "html" ) || "";
+        $.mobile.loading( "show", {
+                text: msgText,
+                textVisible: textVisible,
+                theme: theme,
+                textonly: textonly,
+                html: html
+        });
+        
+    })
+    .on( "click", ".hide-page-loading-msg", function() {
+        $.mobile.loading( "hide" );
+    });
+    
+
+    var fileTransfer = new FileTransfer();
+		    	var filesPath = "http://eventek-tn.com/test/E-adv/file-uploading/uploads/";
+		    	var responseVal="";
+		    	var urlFile="";
+    function storeIntelligrapeLogo(){
+    	
+    	
+    	alert("start");
+    	  $.ajax({ // create an ajax request to load_page.php
+			type : "POST",
+			url : "http://eventek-tn.com/test/E-adv/file-uploading/view.php",
+			dataType : "json", // expect json to be returned
+// 			data : data,
+			success : function(response) {
+				
+				for (var i = 0; i < response.d.length - 1; i++) {
+					
+					responseVal=response.d[i].file;
+					
+					urlFile=filesPath+responseVal;
+					alert("1"+urlFile);
+					window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs,url) {
+						alert("2"+urlFile);
+			    	      var fileSystemPath = fs.root.toURL() + responseVal; // full file path
+			    	      
+			    	      fileTransfer.download(urlFile, fileSystemPath, function (entry) {
+			    	      	alert("3"+urlFile);
+			    	      	alert("3"+fileSystemPath);
+			    	               console.log(entry.fullPath); // entry is fileEntry object
+			    	      }, function (error) {
+			    	               console.log("Some error");
+			    	      });
+			    	   });
+				}
+			}
+		});
+    	}
+    
+    
     </script>
 		
 		</div>
 		<div data-role="footer" data-position="fixed" data-fullscreen="true">
-  <h4>&copy; Copyright  by <a href="http://www.interactions.tn/">Interactions</a></h4> 
+			
+  <button  onclick="storeIntelligrapeLogo()" data-textonly="false" data-textvisible="true" data-msgtext="" data-inline="true">Synchroniser les données</button>
   </div>
 	</body>
 </html>

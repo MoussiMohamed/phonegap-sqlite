@@ -1,5 +1,5 @@
 function f(){
-	alert("here");
+	
 var url = 'http://www.eventek-tn.com/test/E-adv/file-uploading/uploads/77863-interactions-_-offre-technique-projet-e-adv--v-1-0-2.pdf';
    var filePath = 'C:\Users\dev2\sqliteProj\phonegap-sqlite\my-app\platforms\android\assets\www\img';
    var fileTransfer = new FileTransfer();
