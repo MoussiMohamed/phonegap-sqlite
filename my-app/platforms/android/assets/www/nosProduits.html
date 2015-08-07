@@ -76,53 +76,102 @@ sessionStorage.setItem("choixProduit",childval);
     .on( "click", ".hide-page-loading-msg", function() {
         $.mobile.loading( "hide" );
     });
-    
 
     var fileTransfer = new FileTransfer();
 		    	var filesPath = "http://eventek-tn.com/test/E-adv/file-uploading/uploads/";
 		    	var responseVal="";
 		    	var urlFile="";
-    function storeIntelligrapeLogo(){
-    	
-    	
-    	alert("start");
-    	  $.ajax({ // create an ajax request to load_page.php
+		    	var jsonArray="";
+		    	var jsonArrayForDB="";
+var db;
+var dbCreated = false;
+    function synchroData(){
+    	  // $.ajax({ // create an ajax request to load_page.php
+			// type : "POST",
+			// url : "http://eventek-tn.com/test/E-adv/file-uploading/view.php",
+			// dataType : "json", // expect json to be returned
+// 
+			// success : function(response) {
+				// jsonArray=response;
+					// window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+						// for (var i = 0; i < jsonArray.d.length - 1; i++) {
+					// responseVal=jsonArray.d[i].file;
+						// urlFile=filesPath+responseVal;
+			    	      // var fileSystemPath = fs.root.toURL() + responseVal; // full file path
+			    	      // fileTransfer.download(urlFile, fileSystemPath, function (entry) {
+			    	               // console.log(entry.fullPath); // entry is fileEntry object
+			    	      // }, function (error) {
+			    	               // console.log("Some error");
+			    	      // });
+			    	   // }
+			    	   // });
+				// }
+// 		
+		// });
+
+		$.ajax({ // create an ajax request to get all Data for synchronization
 			type : "POST",
-			url : "http://eventek-tn.com/test/E-adv/file-uploading/view.php",
+			url : "http://eventek-tn.com/test/E-adv/file-uploading/SychnronizeDB.php",
 			dataType : "json", // expect json to be returned
-// 			data : data,
-			success : function(response) {
-				
-				for (var i = 0; i < response.d.length - 1; i++) {
-					
-					responseVal=response.d[i].file;
-					
-					urlFile=filesPath+responseVal;
-					alert("1"+urlFile);
-					window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs,url) {
-						alert("2"+urlFile);
-			    	      var fileSystemPath = fs.root.toURL() + responseVal; // full file path
-			    	      
-			    	      fileTransfer.download(urlFile, fileSystemPath, function (entry) {
-			    	      	alert("3"+urlFile);
-			    	      	alert("3"+fileSystemPath);
-			    	               console.log(entry.fullPath); // entry is fileEntry object
-			    	      }, function (error) {
-			    	               console.log("Some error");
-			    	      });
-			    	   });
-				}
-			}
-		});
-    	}
-    
-    
+
+	success : function(responseData) {
+	jsonArrayForDB=responseData;
+		db = window.openDatabase("db_e_adv", "1.0", "db_e_adv", 200000);
+		if (dbCreated) {
+
+		} else {
+			db.transaction(populateDB, transaction_error, populateDB_success);
+		}
+		//for (var i = 0; i < responseData.user.length - 1; i++) {
+			alert(responseData.user[1].id_user);
+		//}
+	}
+
+	});
+	
+	
+	
+	}
+// 
+	// }
+// 	
+	function populateDB(tx) {
+	tx.executeSql('DROP TABLE IF EXISTS user');
+var SqlStringUser = "CREATE TABLE IF NOT EXISTS user ("
+  + "id_user int(11) NOT NULL, "
+  + "name varchar(50) NOT NULL, "
+  + "surname varchar(50) NOT NULL, "
+  + "email varchar(60) NOT NULL, "
+  + "password varchar(50) NOT NULL, "
+  + "dateInsert datetime DEFAULT NULL, "
+  + "PRIMARY KEY (id_user)) ";
+ 
+  tx.executeSql(SqlStringUser);
+ // for (var i = 0; i < jsonArrayForDb.user.length - 1; i++) {
+// 			
+		// }
+		alert(jsonArrayForDb.user[1].id_user);
+ //tx.executeSql("INSERT INTO Registration (firstname,lastname,age,username,password) VALUES ('"+ fname +"','"+ lname +"' , "+ age+", '"+ uname +"','"+ pwrd +"' )");
+  
+}
+
+function transaction_error(tx, error) {
+ alert("Database Error: " + error);
+}
+
+function populateDB_success() {
+ dbCreated = true;
+
+ alert("Data Synchronized Successfully");
+  
+}
+	
     </script>
 		
 		</div>
 		<div data-role="footer" data-position="fixed" data-fullscreen="true">
 			
-  <button  onclick="storeIntelligrapeLogo()" data-textonly="false" data-textvisible="true" data-msgtext="" data-inline="true">Synchroniser les données</button>
+  <button  onclick="synchroData()" data-textonly="false" data-textvisible="true" data-msgtext="" data-inline="true">Synchroniser les données</button>
   </div>
 	</body>
 </html>
