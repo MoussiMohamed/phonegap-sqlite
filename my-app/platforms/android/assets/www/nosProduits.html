@@ -82,9 +82,10 @@ sessionStorage.setItem("choixProduit",childval);
 		    	var responseVal="";
 		    	var urlFile="";
 		    	var jsonArray="";
-		    	var jsonArrayForDB="";
+		    	var jsonArrayForDB="jsonArrayForDB";
 var db;
 var dbCreated = false;
+// document.addEventListener("deviceready", onDeviceReady, false);
     function synchroData(){
     	  // $.ajax({ // create an ajax request to load_page.php
 			// type : "POST",
@@ -115,15 +116,21 @@ var dbCreated = false;
 			dataType : "json", // expect json to be returned
 
 	success : function(responseData) {
-	jsonArrayForDB=responseData;
-		db = window.openDatabase("db_e_adv", "1.0", "db_e_adv", 200000);
-		if (dbCreated) {
-
-		} else {
-			db.transaction(populateDB, transaction_error, populateDB_success);
-		}
+// 	jsonArrayForDB=responseData;
+// 	parsedResult.ListaPermessi
+	sessionStorage.setItem("jsonArraySynchro", JSON.stringify(responseData));
+// 	sessionStorage.setItem("jsonArraySynchro",jsonArrayForDB);
+	 db = window.openDatabase("db_e_adv", "1.0", "db_e_adv", 2000000);
+	 if (dbCreated)
+	 {
+		 
+	 }
+	 else{
+	  db.transaction(populateDB, transaction_error, populateDB_success);
+	 	 }
+		
 		//for (var i = 0; i < responseData.user.length - 1; i++) {
-			alert(responseData.user[1].id_user);
+// 			alert(jsonArrayForDB.user[1].id_user);
 		//}
 	}
 
@@ -135,25 +142,120 @@ var dbCreated = false;
 // 
 	// }
 // 	
-	function populateDB(tx) {
-	tx.executeSql('DROP TABLE IF EXISTS user');
-var SqlStringUser = "CREATE TABLE IF NOT EXISTS user ("
-  + "id_user int(11) NOT NULL, "
-  + "name varchar(50) NOT NULL, "
-  + "surname varchar(50) NOT NULL, "
-  + "email varchar(60) NOT NULL, "
-  + "password varchar(50) NOT NULL, "
-  + "dateInsert datetime DEFAULT NULL, "
-  + "PRIMARY KEY (id_user)) ";
+// 	function populateDB(tx) {
+// 	tx.executeSql('DROP TABLE IF EXISTS user');
+// var SqlStringUser = "CREATE TABLE IF NOT EXISTS user ("
+//   + "id_user int(11) NOT NULL, "
+//   + "name varchar(50) NOT NULL, "
+//   + "surname varchar(50) NOT NULL, "
+//   + "email varchar(60) NOT NULL, "
+//   + "password varchar(50) NOT NULL, "
+//   + "dateInsert datetime DEFAULT NULL, "
+//   + "PRIMARY KEY (id_user)) ";
  
-  tx.executeSql(SqlStringUser);
- // for (var i = 0; i < jsonArrayForDb.user.length - 1; i++) {
-// 			
-		// }
-		alert(jsonArrayForDb.user[1].id_user);
- //tx.executeSql("INSERT INTO Registration (firstname,lastname,age,username,password) VALUES ('"+ fname +"','"+ lname +"' , "+ age+", '"+ uname +"','"+ pwrd +"' )");
+//   tx.executeSql(SqlStringUser);
+//  for (var i = 0; i < jsonArrayForDb.user.length - 1; i++) {
+			
+// 		}
+// 		alert(jsonArrayForDb.user[1].id_user);
+//  tx.executeSql("INSERT INTO Registration (firstname,lastname,age,username,password) VALUES ('"+ fname +"','"+ lname +"' , "+ age+", '"+ uname +"','"+ pwrd +"' )");
   
-}
+// }
+
+
+	function populateDB(tx) {
+		tx.executeSql('DROP TABLE IF EXISTS user');
+		var SqlStringUser = "CREATE TABLE IF NOT EXISTS user ("
+		  + "id_user int(11) NOT NULL, "
+		  + "name varchar(50) NOT NULL, "
+		  + "surname varchar(50) NOT NULL, "
+		  + "email varchar(60) NOT NULL, "
+		  + "password varchar(50) NOT NULL, "
+		  + "dateInsert datetime DEFAULT NULL, "
+		  + "PRIMARY KEY (id_user)) ";
+		var SqlStringProduit = "CREATE TABLE IF NOT EXISTS produit ("
+			  + "id_Produit int(11) NOT NULL, "
+			  + "nom_Produit varchar(50) DEFAULT NULL, "
+			  + "date_Insertion datetime DEFAULT NULL, "
+			  + "date_Modification datetime DEFAULT NULL, "
+			  + "PRIMARY KEY (id_Produit)) ";
+		var SqlStringRole = "CREATE TABLE IF NOT EXISTS role ("
+			  + "id_role int(11) NOT NULL, "
+			  + "role_name varchar(30) DEFAULT NULL, "
+			  + "PRIMARY KEY (id_role)) ";
+		var SqlStringTbl_uploads = "CREATE TABLE IF NOT EXISTS tbl_uploads ("
+			  + "id_file int(11) NOT NULL, "
+			  + "file varchar(200) NOT NULL, "
+			  + "type varchar(10) NOT NULL, "
+			  + "datafile mediumblob NOT NULL, "
+			  + "size int(11) NOT NULL, "
+			  + "content_type varchar(20) DEFAULT NULL, "
+			  + "id_produit int(11) NOT NULL, "
+			  + "PRIMARY KEY (id_file), "
+			  + "constraint fk FOREIGN KEY (id_produit) references produit(id_produit)) ";
+		var SqlStringPrivilege = "CREATE TABLE IF NOT EXISTS privilege ("
+			  + "id_privilege int(11) NOT NULL, "
+			  + "privilege varchar(50) NOT NULL, "
+			  + "PRIMARY KEY (id_privilege)) ";
+		var SqlStringAttr_priv_role = "CREATE TABLE IF NOT EXISTS attr_priv_role ("
+			  + "id_role int(11) DEFAULT NULL, "
+			  + "id_privilege int(11) DEFAULT NULL, "
+			  + "PRIMARY KEY (id_role,id_privilege), "
+			  + "constraint fk_privilege FOREIGN KEY (id_privilege) references privilege(id_privilege)) ";
+		var SqlStringAttrib_role_user = "CREATE TABLE IF NOT EXISTS attr_role_user ("
+			  + "id_user int(11) not null, "
+			  + "id_role int(11) not null, "		
+			  + "PRIMARY KEY (id_user,id_role), "
+			  + "constraint fkUser FOREIGN KEY (id_user) references user(id_user), "
+			  + "constraint fkRole FOREIGN KEY (id_role) references role(id_role)) ";
+			  
+		tx.executeSql(SqlStringUser);
+		tx.executeSql('DROP TABLE IF EXISTS produit');
+		tx.executeSql(SqlStringProduit);
+		tx.executeSql('DROP TABLE IF EXISTS role');
+		tx.executeSql(SqlStringRole);
+		tx.executeSql('DROP TABLE IF EXISTS tbl_uploads');
+		tx.executeSql(SqlStringTbl_uploads);
+		tx.executeSql('DROP TABLE IF EXISTS privilege');
+		tx.executeSql(SqlStringPrivilege);
+		tx.executeSql('DROP TABLE IF EXISTS attr_priv_role');
+		tx.executeSql(SqlStringAttr_priv_role);
+		tx.executeSql('DROP TABLE IF EXISTS attr_role_user');
+		tx.executeSql(SqlStringAttrib_role_user);
+		 alert(parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user.length - 1));
+		 alert(parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).produit.length - 1));
+		  for (var i = 0; i < parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user.length - 1); i++) {
+			 tx.executeSql("INSERT INTO user (id_user,name,surname,email,password,dateInsert) VALUES ('"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].id_user +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].name +"' , '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].surname+"', '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].email +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].password +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].dateInsert +"' )");
+		   }
+		  for (var j = 0; j < parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).produit.length - 1); j++) {
+				 tx.executeSql("INSERT INTO produit (id_Produit,nom_Produit,date_Insertion,date_Modification) VALUES ('"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).produit[j].id_Produit +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).produit[j].nom_Produit +"' , '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).produit[j].date_Insertion+"', '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).produit[j].date_Modification +"' )");
+			   }
+		  for (var k = 0; k < parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).role.length - 1); k++) {
+				 tx.executeSql("INSERT INTO role (id_role,role_name) VALUES ('"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).role[k].id_role +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).role[k].role_name +"' )");
+			   }
+		  for (var l = 0; l < parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).tbl_uploads.length - 1); l++) {
+				 tx.executeSql("INSERT INTO tbl_uploads (id_file,file,type,datafile,size,content_type,id_produit) VALUES ('"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).tbl_uploads[l].id_file +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).tbl_uploads[l].file +"' , '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).tbl_uploads[l].type+"', '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).tbl_uploads[l].datafile +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).tbl_uploads[l].size +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).tbl_uploads[l].content_type+"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).tbl_uploads[l].id_produit +"' )");
+			   }
+		  for (var m = 0; m < parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).privilege.length - 1); m++) {
+				 tx.executeSql("INSERT INTO privilege (id_privilege,privilege) VALUES ('"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).privilege[m].id_privilege +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).privilege[m].privilege +"' )");
+			   }
+		  for (var n = 0; n < parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).attr_priv_role.length - 1); n++) {
+				 tx.executeSql("INSERT INTO attr_priv_role (id_role,id_privilege) VALUES ('"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).attr_priv_role[n].id_role +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).attr_priv_role[n].id_privilege +"' )");
+			   }
+		  for (var o = 0; o < parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).attr_role_user.length - 1); o++) {
+			  
+				 tx.executeSql("INSERT INTO attr_role_user (id_user,id_role) VALUES ('"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).attr_role_user[o].id_user +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).attr_role_user[o].id_role +"' )");
+			   }
+		  
+		  
+		  tx.executeSql('SELECT * from produit limit '+1, [], function(tx, results){
+			 var blocoInsercao;
+			 for (var j=0; j < results.rows.length; j++) {
+			 alert(results.rows.item(j).nom_Produit);
+			 
+			 }
+		  });
+	 }
 
 function transaction_error(tx, error) {
  alert("Database Error: " + error);
@@ -171,7 +273,7 @@ function populateDB_success() {
 		</div>
 		<div data-role="footer" data-position="fixed" data-fullscreen="true">
 			
-  <button  onclick="synchroData()" data-textonly="false" data-textvisible="true" data-msgtext="" data-inline="true">Synchroniser les données</button>
+  <button onclick="synchroData()" data-textonly="false" data-textvisible="true" data-msgtext="" data-inline="true">Synchroniser les données</button>
   </div>
 	</body>
 </html>
