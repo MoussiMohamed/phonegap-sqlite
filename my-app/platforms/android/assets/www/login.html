@@ -1,67 +1,155 @@
-<html>
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<title></title>
- 
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+
+		<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+		Remove this if you use the .htaccess -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+		<title>Login</title>
+
+		<meta name="viewport" content="width=device-width; initial-scale=1.0">
 <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+ 
      <script type="text/javascript" src="cordova.js"></script>
+    
   <script type="text/javascript" src="js/jquery.js"></script>
   <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script> 
-   
-<!-- <script type="text/javascript" src="js/login.js"></script> -->
-</head>
- 
-<body>
- 
- <!-- Home -->
- <div data-role="page" id="page1">
-  <div data-role="header">
-  <a href="index.html" data-transition="flow" class="ui-btn ui-icon-home ui-btn-icon-left">Home</a>
-  <h1>Page Login</h1>
+  
+		<!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
+		<link rel="shortcut icon" href="/favicon.ico">
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+	</head>
+
+	<body>
+		 <div data-role="header">
+  <a href="index.html" data-transition="slide" class="ui-btn ui-icon-home ui-btn-icon-left">Home</a>
+  <h1 id="choixP"></h1>
   <a href="#" class="ui-btn ui-icon-info ui-btn-icon-left">A propos</a>
 </div>
-   <div id="wrapper">
-   <form action="nosProduits.html" name="mylogin">
+		
+		<script type="text/javascript" charset="utf-8">
+		function validationcheck(){
+			 
+			  if (document.mylogin.email.value == "") {
+			   alert("Veuillez entrer votre email.");
+			   document.mylogin.email.focus(); 
+			  } else if (document.mylogin.psw.value == "") {
+			   alert("Veuillez entrer votre mot de passe");
+			   document.mylogin.psw.focus();
+			  }
+			  else
+			   {
+			     success();
+			   }
+			 }
+			  
+			 function success(){
+				 
+			  doLogin();
+			 }
+			 
+			 var db;
+			 var dbCreated = false;
+			  
+			 function doLogin(){
+			 db = window.openDatabase("db_e_adv", "1.0", "db_e_adv", 2000000);
+			  if (dbCreated)
+			   {
+			       // created
+			   }
+			   
+			  else{
+			  db.transaction(getregistdata, transaction_error);
+			  }
+			 }
+			 
+			 function getregistdata(tx){
+			   
+			   var sql = "select u.email, u.password, at_r_u.id_role from user u, role r, attr_role_user at_r_u"
+				  +" where at_r_u.id_user=u.id_user"
+				  +" and at_r_u.id_role=r.id_role"
+				  +" and at_r_u.id_role=2";
+			   tx.executeSql(sql, [], getlogin_success);
+			 }
+			  
+			 function transaction_error(tx, error) {
+			  alert("Database Error: " + error);
+			 }
+			 
+			 function getlogin_success(tx, results){
+				 var j=0;
+				 var user;
+				 var len = results.rows.length;
+				 var email=document. getElementById("email").value;
+			     var password=document. getElementById("psw").value;
+			     while (j<len){
+			    	 var user = results.rows.item(j);
+			    	 var uemail=user.email;
+				     var pasw=user.password;
+				     if(email==uemail && password==pasw){
+				    	 j=len;
+					      alert("Login Success");
+					      
+					      window.open("nosProduits.html");
+					      
+					     }
+				     else {
+				    	 j+=1;
+				    	 if(j==len){
+					    	 alert("login failed");
+					    	 break;
+					     }
+				     }
+				     
+			     }
+			    
+// 			    alert(len);
+// 			    for (var i=0; i< len; i++) {  
+// 			    	alert(i);
+// 			     var user = results.rows.item(i);
+			     
+// 			     var uname=user.email;
+// 			     var pasw=user.password;
+// 			     if(email==uname && password==pasw){
+// 			      alert("Login Success");
+			      
+// 			      window.open("nosProduits.html");
+// 			      break;
+// 			     }
+// 			     else{
+// 			    	 alert("login failed");
+// 			      }
+// 			    }
+
+			 }
+function gotoSynchronizedata(){
+	window.open("nosProduits.html");
+}
+		</script>
+		<div>
+			
+				<div id="wrapper">
+   <form action="" name="mylogin">
   <div data-role="content">
    <div class="username" data-role="fieldcontain">
-    <label for="username"> Username </label> <input name="username"
-     id="username" placeholder="enter username" value="" type="text">
+     <input name="email"
+     id="email" placeholder="E-mail" value="" type="text">
    </div>
    <div class="psw" data-role="fieldcontain">
-    <label for="psw"> Password </label> <input name="password" id="psw"
-     placeholder="enter password" value="" type="text">
+   <input name="password" id="psw"
+     placeholder="Mot de passe" value="" type="text">
    </div>
-    <input id="login" value="Login" type="submit" name="Login" >
+    <input id="login" value="Login" type="button" name="Login" onclick="validationcheck();">
+    <input id="synchro" value="go to Synchronize data" type="button" name="synchro" onclick="gotoSynchronizedata();">
   </div>
   </form>
   </div>
-  <div data-role="footer" data-position="fixed" data-fullscreen="true">
+			
+			<div data-role="footer" data-position="fixed" data-fullscreen="true">
   <h4>&copy; Copyright  by <a href="http://www.interactions.tn/">Interactions</a></h4> 
   </div>
- </div>
- 
-<script type="text/javascript">
- function validationcheck(){
- 
-  if (document.mylogin.username.value == "") {
-   alert("Please Enter Username.");
-   document.mylogin.username.focus(); 
-  } else if (document.mylogin.psw.value == "") {
-   alert("Please Enter Password.");
-   document.mylogin.psw.focus();
-  }
-  else
-   {
-     success();
-   }
- }
-  
- function success(){
-  onDeviceReady();
- }
-</script>
-</body>
+		</div>
+	</body>
 </html>

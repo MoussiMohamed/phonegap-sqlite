@@ -9,9 +9,9 @@
  
 <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
      <script type="text/javascript" src="cordova.js"></script>
-  
+  <script type="text/javascript" src="js/jquery.js"></script>
   <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script> 
-   <script type="text/javascript" src="js/jquery.js"></script>
+   
 	</head>
 
 	<body>
@@ -32,22 +32,59 @@
     });
 
     function onDeviceReady() {
-        
-			$.ajax({ // create an ajax request to load_page.php
-				type : "POST",
-				url : "http://www.eventek-tn.com/test/E-adv/server/listProduct.php",
-				dataType : "json", // expect json to be returned
-				//data : data,
-				success : function(response) {
+    	var db;
+		 var dbCreated = false;
+		  
+		 
+		 db = window.openDatabase("db_e_adv", "1.0", "db_e_adv", 2000000);
+		  if (dbCreated)
+		   {
+		       // created
+		   }
+		   
+		  else{
+		  db.transaction(getdataProduct, transaction_errorProduct);
+		  }
+		 }
+		 
+		 function getdataProduct(tx){
+		   
+		   var sql = "select * from produit";
+		   tx.executeSql(sql, [], getProduct_success);
+		 }
+		  
+		 function transaction_errorProduct(tx, error) {
+		  alert("Database Error: " + error);
+		 }
+		 
+		 function getProduct_success(tx, results){
+			 
+			 var len = results.rows.length;
+			 for (var i = 0; i < len; i++){
+		    
+		    	 var user = results.rows.item(i);
+		    	 
+		    	 $('ul#contentList').append(
+							'<li onclick="doSaveIdPdToShowContent(this)" value="'+user.id_Produit+'" ><a href="" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'
+									+ user.nom_Produit + '</a></li>');
+			   
+		     }
+			 }
+// 			$.ajax({ // create an ajax request to load_page.php
+// 				type : "POST",
+// 				url : "http://www.eventek-tn.com/test/E-adv/server/listProduct.php",
+// 				dataType : "json", // expect json to be returned
+// 				//data : data,
+// 				success : function(response) {
 
-					for (var i = 0; i < response.d.length - 1; i++) {
-						$('ul#contentList').append(
-								'<li onclick="doSaveIdPdToShowContent(this)" value="'+response.d[i].id_Produit+'" ><a href="" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'
-										+ response.d[i].nom_Produit + '</a></li>');
-					}
-				}
-			});
-    }
+// 					for (var i = 0; i < response.d.length - 1; i++) {
+// 						$('ul#contentList').append(
+// 								'<li onclick="doSaveIdPdToShowContent(this)" value="'+response.d[i].id_Produit+'" ><a href="" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'
+// 										+ response.d[i].nom_Produit + '</a></li>');
+// 					}
+// 				}
+// 			});
+    
     
     function doSaveIdPdToShowContent(idProduit){
     	sessionStorage.setItem("idProd",idProduit.value);
@@ -57,25 +94,13 @@ var childval = child.innerHTML;
 sessionStorage.setItem("choixProduit",childval);
     	window.open("choixPres_Article.html","_top");
     }
-    $( document ).on( "click", ".show-page-loading-msg", function() {
-        var $this = $( this ),
-            theme = $this.jqmData( "theme" ) || $.mobile.loader.prototype.options.theme,
-            msgText = $this.jqmData( "msgtext" ) || $.mobile.loader.prototype.options.text,
-            textVisible = $this.jqmData( "textvisible" ) || $.mobile.loader.prototype.options.textVisible,
-            textonly = !!$this.jqmData( "textonly" );
-            html = $this.jqmData( "html" ) || "";
-        $.mobile.loading( "show", {
-                text: msgText,
-                textVisible: textVisible,
-                theme: theme,
-                textonly: textonly,
-                html: html
-        });
+//     $( document ).on( "click", ".show-page-loading-msg", function() {
         
-    })
-    .on( "click", ".hide-page-loading-msg", function() {
-        $.mobile.loading( "hide" );
-    });
+        
+//     })
+//     .on( "click", ".hide-page-loading-msg", function() {
+        
+//     });
 
     var fileTransfer = new FileTransfer();
 		    	var filesPath = "http://eventek-tn.com/test/E-adv/file-uploading/uploads/";
@@ -87,28 +112,38 @@ var db;
 var dbCreated = false;
 // document.addEventListener("deviceready", onDeviceReady, false);
     function synchroData(){
-    	  // $.ajax({ // create an ajax request to load_page.php
-			// type : "POST",
-			// url : "http://eventek-tn.com/test/E-adv/file-uploading/view.php",
-			// dataType : "json", // expect json to be returned
-// 
-			// success : function(response) {
-				// jsonArray=response;
-					// window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
-						// for (var i = 0; i < jsonArray.d.length - 1; i++) {
-					// responseVal=jsonArray.d[i].file;
-						// urlFile=filesPath+responseVal;
-			    	      // var fileSystemPath = fs.root.toURL() + responseVal; // full file path
-			    	      // fileTransfer.download(urlFile, fileSystemPath, function (entry) {
-			    	               // console.log(entry.fullPath); // entry is fileEntry object
-			    	      // }, function (error) {
-			    	               // console.log("Some error");
-			    	      // });
-			    	   // }
-			    	   // });
-				// }
-// 		
-		// });
+    	$.mobile.loader.prototype.options.text = "loading";
+    	  $.mobile.loader.prototype.options.textVisible = false;
+    	  $.mobile.loader.prototype.options.theme = "a";
+    	  $.mobile.loader.prototype.options.html = "";
+    	  $.mobile.loading( "show", {
+    		  text: "Synchronizing...",
+    		  textVisible: true,
+    		  theme: "a",
+    		  html: ""
+    		});
+    	  $.ajax({ // create an ajax request to load_page.php
+			type : "POST",
+			url : "http://eventek-tn.com/test/E-adv/file-uploading/view.php",
+			dataType : "json", // expect json to be returned
+
+			success : function(response) {
+				jsonArray=response;
+					window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+						for (var i = 0; i < jsonArray.d.length - 1; i++) {
+					responseVal=jsonArray.d[i].file;
+						urlFile=filesPath+responseVal;
+			    	      var fileSystemPath = fs.root.toURL() + responseVal; // full file path
+			    	      fileTransfer.download(urlFile, fileSystemPath, function (entry) {
+			    	               console.log(entry.fullPath); // entry is fileEntry object
+			    	      }, function (error) {
+			    	               console.log("Some error");
+			    	      });
+			    	   }
+			    	   });
+				}
+		
+		});
 
 		$.ajax({ // create an ajax request to get all Data for synchronization
 			type : "POST",
@@ -203,8 +238,8 @@ var dbCreated = false;
 			  + "PRIMARY KEY (id_role,id_privilege), "
 			  + "constraint fk_privilege FOREIGN KEY (id_privilege) references privilege(id_privilege)) ";
 		var SqlStringAttrib_role_user = "CREATE TABLE IF NOT EXISTS attr_role_user ("
-			  + "id_user int(11) not null, "
-			  + "id_role int(11) not null, "		
+			  + "id_user int(11) not null DEFAULT '0', "
+			  + "id_role int(11) not null DEFAULT '0', "		
 			  + "PRIMARY KEY (id_user,id_role), "
 			  + "constraint fkUser FOREIGN KEY (id_user) references user(id_user), "
 			  + "constraint fkRole FOREIGN KEY (id_role) references role(id_role)) ";
@@ -222,8 +257,7 @@ var dbCreated = false;
 		tx.executeSql(SqlStringAttr_priv_role);
 		tx.executeSql('DROP TABLE IF EXISTS attr_role_user');
 		tx.executeSql(SqlStringAttrib_role_user);
-		 alert(parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user.length - 1));
-		 alert(parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).produit.length - 1));
+		 
 		  for (var i = 0; i < parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user.length - 1); i++) {
 			 tx.executeSql("INSERT INTO user (id_user,name,surname,email,password,dateInsert) VALUES ('"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].id_user +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].name +"' , '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].surname+"', '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].email +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].password +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].dateInsert +"' )");
 		   }
@@ -247,14 +281,6 @@ var dbCreated = false;
 				 tx.executeSql("INSERT INTO attr_role_user (id_user,id_role) VALUES ('"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).attr_role_user[o].id_user +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).attr_role_user[o].id_role +"' )");
 			   }
 		  
-		  
-		  tx.executeSql('SELECT * from produit limit '+1, [], function(tx, results){
-			 var blocoInsercao;
-			 for (var j=0; j < results.rows.length; j++) {
-			 alert(results.rows.item(j).nom_Produit);
-			 
-			 }
-		  });
 	 }
 
 function transaction_error(tx, error) {
@@ -263,9 +289,9 @@ function transaction_error(tx, error) {
 
 function populateDB_success() {
  dbCreated = true;
-
- alert("Data Synchronized Successfully");
-  
+ $.mobile.loading( "hide" );
+ alert("Data synchronized successfully");
+ 
 }
 	
     </script>
@@ -273,7 +299,7 @@ function populateDB_success() {
 		</div>
 		<div data-role="footer" data-position="fixed" data-fullscreen="true">
 			
-  <button onclick="synchroData()" data-textonly="false" data-textvisible="true" data-msgtext="" data-inline="true">Synchroniser les données</button>
+  <button onclick="synchroData()" data-textonly="false" data-textvisible="true" data-msgtext="" data-inline="true" class="show-page-loading-msg">Synchroniser les données</button>
   </div>
 	</body>
 </html>
