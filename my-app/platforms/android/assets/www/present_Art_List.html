@@ -24,14 +24,13 @@
     </head>
   <body>
   	<div data-role="header">
-  <a href="choixPres_Article.html" data-transition="slide" class="ui-btn ui-icon-arrow-l ui-btn-icon-left">Precedent</a>
+  <a href="nosProduits.html" data-transition="slide" class="ui-btn ui-icon-arrow-l ui-btn-icon-left">Precedent</a>
   <h1 id="typePA"></h1>
   <a href="#" class="ui-btn ui-icon-info ui-btn-icon-left">A propos</a>
 </div>
  <ul id="contentList" data-role="listview" data-filter="true" data-filter-placeholder="Search content..." data-inset="true">
 </ul>
-<button onclick="downloadFile()">Synchroniser les données</button>
-<a href="touchPDFJQuery/index.html" target="_top">voir pdf test</a>
+
 
 <script type="text/javascript" charset="utf-8">
     $(document).ready(function () {
@@ -39,62 +38,70 @@
     });
 
     function onDeviceReady() {
+    	document.getElementById('typePA').innerHTML=sessionStorage.getItem("presentation_article");
+    	var db;
+		 var dbCreated = false;
+		  
+		 
+		 db = window.openDatabase("db_e_adv", "1.0", "db_e_adv", 2000000);
+		  if (dbCreated)
+		   {
+		       // created
+		   }
+		   
+		  else{
+		  db.transaction(getdataPresArt, transaction_errorPresArt);
+		  }
+		 }
+		 
+		 function getdataPresArt(tx){
+		 	var idP=sessionStorage.getItem("idProd");
+		 	
+		   var sqlPres = "SELECT * FROM tbl_uploads where id_produit="+idP
+		   +" and content_type='Presentation'";
+		   var sqlArt = "SELECT * FROM tbl_uploads where id_produit="+idP
+		   +" and content_type='Article'";
+		   if(sessionStorage.getItem("presentation_article") == "Presentation"){
+		   tx.executeSql(sqlPres, [], getPresArt_success);
+		   }else if(sessionStorage.getItem("presentation_article") == "Article"){
+		   	tx.executeSql(sqlArt, [], getPresArt_success);
+		   }
+		 }
+		  
+		 function transaction_errorPresArt(tx, error) {
+		  alert("Database Error: " + error);
+		 }
+		 
+		 function getPresArt_success(tx, results){
+			 
+			 var len = results.rows.length;
+			 for (var i = 0; i < len; i++){
+		    
+		    	 var PresArt = results.rows.item(i);
+		    	 
+		    	 $('ul#contentList').append(
+							'<li onClick="doSavePDFTitleToShow(this)" value="'+PresArt.id_file+'" ><a href="" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'
+									+ PresArt.file + '</a></li>');
+									
+											    	 // $('ul#contentList').append(
+							// '<li onclick="doSaveIdPdToShowContent(this)" value="'+user.id_Produit+'" ><a href="" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'
+									// + user.nom_Produit + '</a></li>');
+			   
+		     }
+			 }
+			 function doSavePDFTitleToShow(fileName){
     	
-        document.getElementById('typePA').innerHTML=sessionStorage.getItem("presentation_article");
-        var data = {
-				"idProduit" : sessionStorage.getItem("idProd"),
-				"ChoixPA" : sessionStorage.getItem("presentation_article"),
-			};
-			$.ajax({ // create an ajax request to load_page.php
-				type : "POST",
-				url : "http://eventek-tn.com/test/E-adv/file-uploading/view.php",
-				dataType : "json", // expect json to be returned
-				data : data,
-				success : function(response) {
+    	
+var child = fileName.firstChild;
+var childval = child.innerHTML;
 
-					for (var i = 0; i < response.d.length - 1; i++) {
-						$('ul#contentList').append(
-								'<li><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'
-										+ response.d[i].file + '</a></li>');
-					}
-				}
-			});
+sessionStorage.setItem("PDFFileName",childval);
+
+    	window.open("touchPDFJQuery/index.html","_top");
     }
     
-    function previewFile() {
-    	  var preview = document.querySelector('img');
-    	  var file    = document.querySelector('input[type=file]').files[0];
-    	  var reader  = new FileReader();
-
-    	  reader.onloadend = function () {
-    	    preview.src = reader.result;
-    	  }
-
-    	  if (file) {
-    	    reader.readAsDataURL(file);
-    	  } else {
-    	    preview.src = "";
-    	  }
-    	}
-    
-    function downloadFile(){
-    	
-    }
-    function storeIntelligrapeLogo(){
-    	  var url = "http://www.eventek-tn.com/test/E-adv/file-uploading/uploads/77863-interactions-_-offre-technique-projet-e-adv--v-1-0-2.pdf"; // image url
-    	  window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
-    	      var imagePath = fs.root.fullPath + "/test.pdf"; // full file path
-    	      var fileTransfer = new FileTransfer();
-    	      fileTransfer.download(url, imagePath, function (entry) {
-    	               console.log(entry.fullPath); // entry is fileEntry object
-    	      }, function (error) {
-    	               console.log("Some error");
-    	      });
-    	   })
-    	}
+  
 </script>
-
-<button id="btnDF" onclick="f()" value="Download">download</button>
 <div data-role="footer" data-position="fixed" data-fullscreen="true">
   <h4>&copy; Copyright  by <a href="http://www.interactions.tn/">Interactions</a></h4> 
   </div>

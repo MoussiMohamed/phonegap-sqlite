@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta charset="UTF-8">
-  <script type="text/javascript" src="cordova.js"></script>
+<!--   <script type="text/javascript" src="cordova.js"></script> -->
   <title>test pdf</title>
   <link href="jquery.touchPDF.css" rel="stylesheet" />
 	<style>
@@ -55,16 +55,32 @@
 
 <script type="text/javascript" src="jquery.panzoom.js"></script>
 <script type="text/javascript" src="jquery.mousewheel.js"></script>
-<script type="text/javascript" src="phonegap.js"></script>
+
+<!-- <script type="text/javascript" src="phonegap.js"></script> -->
+<script type="text/javascript" src="../cordova.js"></script>
 <script type="text/javascript">
-	
-	$(function() {
+document.addEventListener("deviceready", doPDFPrepare, false);
+	function doPDFPrepare(){
+		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+			var fileSystemPath = fs.root.toURL();
+		sessionStorage.setItem("fileSystem",fileSystemPath);	
+			
+		});
 		$("#myPDF").pdf( {
 			
+			
+// 			source: fileSystemPath+sessionStorage.getItem("PDFFileName")
 // 			source: "../file-uploading/uploads/"+sessionStorage.getItem("filePDF")
-source: "congres.pdf"
+//sessionStorage.getItem("PDFFileName");
+source: sessionStorage.getItem("fileSystem")+sessionStorage.getItem("PDFFileName")
 		} );
-	});
+	}
+	// $(function() {
+// 		
+// 		
+	// });
+	
+	
 
 </script>
 </body>
