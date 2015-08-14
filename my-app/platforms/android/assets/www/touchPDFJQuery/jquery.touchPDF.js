@@ -27,7 +27,56 @@
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf $
  */
+var db;
+var dbCreated = false;
+function doLike(){
+	db = window.openDatabase("db_e_adv", "1.0", "db_e_adv", 2000000);
+	 if (dbCreated)
+	 {
+		 
+	 }
+	 else{
+	  db.transaction(populateDB, transaction_error, populateDB_success);
+	 	}
+}
+function populateDB(tx) {
+		
+		var SqlStringLike = "CREATE TABLE IF NOT EXISTS t_like("
+		  + "id_like integer AUTO_INCREMENT PRIMARY KEY,"
+		  + "num_page int(11) NOT NULL,"
+		  + "date_like datetime NOT NULL,"
+		  + "nom_medecin varchar(100),"
+		  + "id_user int(11) NOT NULL,"
+		  + "id_file int(11) NOT NULL,"
+		  + "constraint fk_user FOREIGN KEY (id_user) references user(id_user),"
+		  + "constraint fk_file FOREIGN KEY (id_file) references tbl_uploads(id_file))";
+		
+		tx.executeSql(SqlStringLike);
+		var date;
+		date = new Date();
+		date = date.getUTCFullYear() + '-' +
+    ('00' + (date.getUTCMonth()+1)).slice(-2) + '-' +
+    ('00' + date.getUTCDate()).slice(-2) + ' ' + 
+    ('00' + date.getUTCHours()).slice(-2) + ':' + 
+    ('00' + date.getUTCMinutes()).slice(-2) + ':' + 
+    ('00' + date.getUTCSeconds()).slice(-2);
 
+		//var date_like = Date("dd.MM.yyyy HH:mm:ss");
+		var nom_medecin="";
+		
+			 tx.executeSql("INSERT INTO t_like (num_page,date_like,nom_medecin,id_user,id_file) VALUES ('"+ sessionStorage.getItem("pageNum") +"','"+ date +"' , '"+ nom_medecin +"', '"+ sessionStorage.getItem("idUser") +"','"+ sessionStorage.getItem("idFile") +"' )");
+		    
+	 }
+
+function transaction_error(tx, error) {
+ alert("Database Error: " + error);
+}
+
+function populateDB_success() {
+ dbCreated = true;
+alert("success like");
+ 
+}
 
 (function ($) {
 	"use strict";
@@ -73,7 +122,7 @@
 	*/
 	var defaults = {
 		source: null,
-		title: "TouchPDF",
+		title: sessionStorage.getItem("PDFFileName"),
 		tabs: [],
 		tabsColor: "beige",
 		disableZoom: false,
@@ -338,13 +387,22 @@
 				
 				$element.find(".pdf-toolbar").html(
 					'<div class="pdf-title">'+options.title+'</div>'
+					+ '<div class="pdf-button"><button class="pdf-like">Like</button></div>'
+					+ '<div class="pdf-button"><button class="pdf-comment">Comment</button></div>'
 				 	+ '<div class="pdf-button"><button class="pdf-prev">&lt;</button></div>'
 				 	+ '<div class="pdf-button"><span class="pdf-page-count"></span></div>'
 				 	+ '<div class="pdf-button"><button class="pdf-next">&gt;</button></div>'
 				 	+ (options.disableZoom? '':'<div class="pdf-button"><button class="pdf-zoomin">+</button></div>'
 				 		+ '<div class="pdf-button"><button class="pdf-zoomout">-</button></div>')
 				 	);
-				
+				$element.find(".pdf-toolbar > .pdf-button > .pdf-like").on("click", function() {
+					sessionStorage.setItem("pageNum",pageNum);
+					
+					doLike();
+				});
+				$element.find(".pdf-toolbar > .pdf-button > .pdf-comment").on("click", function() {
+					
+				});
 				$element.find(".pdf-toolbar > .pdf-title").on("click", function() {
 					goto(1);
 				});
