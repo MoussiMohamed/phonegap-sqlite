@@ -42,6 +42,11 @@
     	var db;
 		 var dbCreated = false;
 		  
+		  window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+			var fileSystemPath = fs.root.toURL();
+		sessionStorage.setItem("fileSystem",fileSystemPath);	
+			
+		});
 		 
 		 db = window.openDatabase("db_e_adv", "1.0", "db_e_adv", 2000000);
 		  if (dbCreated)
@@ -80,7 +85,7 @@
 		    	 var PresArt = results.rows.item(i);
 		    	
 		    	 $('ul#contentList').append(
-							'<li onClick="doSavePDFTitleToShow(this)" value="'+PresArt.id_file+'" ><a href="" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'
+							'<li style="opacity: 0.7;" onClick="doSavePDFTitleToShow(this)" value="'+PresArt.id_file+'" ><a href="" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'
 									+ PresArt.file + '</a></li>');
 									
 											    	 // $('ul#contentList').append(

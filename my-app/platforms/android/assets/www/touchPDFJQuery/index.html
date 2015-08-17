@@ -45,6 +45,19 @@
 
 <div id="myPDF" style="height: 100%; width: 100%; margin: auto;"></div>
 
+<div data-role="popup" id="popupLogin" data-theme="a" class="ui-corner-all ui-popup ui-body-a ui-overlay-shadow" aria-disabled="false" data-disabled="false" data-shadow="true" data-corners="true" data-transition="none" data-position-to="origin">
+			<form>
+				<div style="padding:10px 20px;">
+				  <h3>Commentaire</h3>
+		          <label for="un" class="ui-hidden-accessible ui-input-text">Créer un commentaire</label>
+		         
+<textarea id="commentText" rows="4" cols="50" name="comment" placeholder="..." data-theme="a" class="ui-input-text ui-body-a ui-corner-all ui-shadow-inset">
+</textarea>
+		    	  <div data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-icon="null" data-iconpos="null" data-theme="b" class="ui-btn ui-shadow ui-btn-corner-all ui-submit ui-btn-up-b" aria-disabled="false"><span class="ui-btn-inner ui-btn-corner-all"></span><button type="submit" onclick="doSaveComment()" data-theme="b" class="ui-btn-hidden" aria-disabled="false">Envoyer</button></div>
+				</div>
+			</form>
+		</div>
+
 <div id="warning-message">this website is only viewable in landscape mode</div>
 
 <script type="text/javascript" src="pdf.compatibility.js"></script>
@@ -54,6 +67,10 @@
 <script type="text/javascript" src="jquery.touchPDF.js"></script>
 
 <script type="text/javascript" src="jquery.panzoom.js"></script>
+<script type="text/javascript" src="../js/jquery.mobile-1.4.5.min.js"></script>
+
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css">
+
 <script type="text/javascript" src="jquery.mousewheel.js"></script>
 
 <!-- <script type="text/javascript" src="phonegap.js"></script> -->
@@ -61,11 +78,7 @@
 <script type="text/javascript">
 document.addEventListener("deviceready", doPDFPrepare, false);
 	function doPDFPrepare(){
-		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
-			var fileSystemPath = fs.root.toURL();
-		sessionStorage.setItem("fileSystem",fileSystemPath);	
-			
-		});
+		
 		$("#myPDF").pdf( {
 			
 			

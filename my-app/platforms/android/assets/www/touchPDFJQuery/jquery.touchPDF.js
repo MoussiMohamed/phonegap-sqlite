@@ -27,6 +27,49 @@
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf $
  */
+var dbC;
+var dbCreatedC = false;
+function doSaveComment(){
+	dbC = window.openDatabase("db_e_adv", "1.0", "db_e_adv", 2000000);
+	 if (dbCreatedC)
+	 {
+		 
+	 }
+	 else{
+	  dbC.transaction(CpopulateDB, Ctransaction_error, CpopulateDB_success);
+	  
+	 	}
+}
+function CpopulateDB(tx) {
+		
+		var dateC;
+		dateC = new Date();
+		dateC = dateC.getUTCFullYear() + '-' +
+    ('00' + (dateC.getUTCMonth()+1)).slice(-2) + '-' +
+    ('00' + dateC.getUTCDate()).slice(-2) + ' ' + 
+    ('00' + dateC.getUTCHours()).slice(-2) + ':' + 
+    ('00' + dateC.getUTCMinutes()).slice(-2) + ':' + 
+    ('00' + dateC.getUTCSeconds()).slice(-2);
+
+		var nom_medecin="";
+		var commentaire=document.getElementById('commentText').value;
+		
+			 tx.executeSql("INSERT INTO t_comment (num_page,date_com,commentaire,nom_medecin,id_user,id_file) VALUES ('"+ sessionStorage.getItem("pageNum") + "' , '"+ dateC+ "' , '" +commentaire +"' , '"+ nom_medecin +"', '"+ sessionStorage.getItem("idUser") +"','"+ sessionStorage.getItem("idFile") +"' )");
+			 
+	 }
+
+function Ctransaction_error(tx, error) {
+ alert("Database Error: " + error);
+}
+
+function CpopulateDB_success() {
+ dbCreated = true;
+alert("success comment");
+
+ 
+}
+
+
 var db;
 var dbCreated = false;
 function doLike(){
@@ -41,17 +84,6 @@ function doLike(){
 }
 function populateDB(tx) {
 		
-		var SqlStringLike = "CREATE TABLE IF NOT EXISTS t_like("
-		  + "id_like integer AUTO_INCREMENT PRIMARY KEY,"
-		  + "num_page int(11) NOT NULL,"
-		  + "date_like datetime NOT NULL,"
-		  + "nom_medecin varchar(100),"
-		  + "id_user int(11) NOT NULL,"
-		  + "id_file int(11) NOT NULL,"
-		  + "constraint fk_user FOREIGN KEY (id_user) references user(id_user),"
-		  + "constraint fk_file FOREIGN KEY (id_file) references tbl_uploads(id_file))";
-		
-		tx.executeSql(SqlStringLike);
 		var date;
 		date = new Date();
 		date = date.getUTCFullYear() + '-' +
@@ -61,7 +93,6 @@ function populateDB(tx) {
     ('00' + date.getUTCMinutes()).slice(-2) + ':' + 
     ('00' + date.getUTCSeconds()).slice(-2);
 
-		//var date_like = Date("dd.MM.yyyy HH:mm:ss");
 		var nom_medecin="";
 		
 			 tx.executeSql("INSERT INTO t_like (num_page,date_like,nom_medecin,id_user,id_file) VALUES ('"+ sessionStorage.getItem("pageNum") +"','"+ date +"' , '"+ nom_medecin +"', '"+ sessionStorage.getItem("idUser") +"','"+ sessionStorage.getItem("idFile") +"' )");
@@ -286,6 +317,7 @@ alert("success like");
 		*/
 		this.next = function () {
 			goto(pageNum+1);
+			
 			return $element;
 		};
 
@@ -387,8 +419,8 @@ alert("success like");
 				
 				$element.find(".pdf-toolbar").html(
 					'<div class="pdf-title">'+options.title+'</div>'
-					+ '<div class="pdf-button"><button class="pdf-like">Like</button></div>'
-					+ '<div class="pdf-button"><button class="pdf-comment">Comment</button></div>'
+					+ '<div class="pdf-button"><button id="btnAimer" class="pdf-like">Aimer</button></div>'
+					+ '<div class="pdf-button"><a href="#popupLogin" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="c" aria-haspopup="true" aria-owns="#popupLogin" ><span ><button class="pdf-comment">Commenter</button></span></a></div>'
 				 	+ '<div class="pdf-button"><button class="pdf-prev">&lt;</button></div>'
 				 	+ '<div class="pdf-button"><span class="pdf-page-count"></span></div>'
 				 	+ '<div class="pdf-button"><button class="pdf-next">&gt;</button></div>'
@@ -399,6 +431,7 @@ alert("success like");
 					sessionStorage.setItem("pageNum",pageNum);
 					
 					doLike();
+					
 				});
 				$element.find(".pdf-toolbar > .pdf-button > .pdf-comment").on("click", function() {
 					

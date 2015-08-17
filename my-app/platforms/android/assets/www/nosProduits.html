@@ -33,10 +33,9 @@
 
     function onDeviceReady() {
     	var db;
-		 var dbCreated = false;
+		var dbCreated = false;
 		  
-		 
-		 db = window.openDatabase("db_e_adv", "1.0", "db_e_adv", 2000000);
+		db = window.openDatabase("db_e_adv", "1.0", "db_e_adv", 2000000);
 		  if (dbCreated)
 		   {
 		       // created
@@ -65,7 +64,7 @@
 		    	 var user = results.rows.item(i);
 		    	 
 		    	 $('ul#contentList').append(
-							'<li data-transition="slide" onclick="doSaveIdPdToShowContent(this)" value="'+user.id_Produit+'" ><a href="" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'
+							'<li style="opacity: 0.7;"  data-transition="slide" onclick="doSaveIdPdToShowContent(this)" value="'+user.id_Produit+'" ><a href="" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'
 									+ user.nom_Produit + '</a></li>');
 			   
 		     }
@@ -110,8 +109,56 @@ sessionStorage.setItem("choixProduit",childval);
 		    	var jsonArrayForDB="jsonArrayForDB";
 var db;
 var dbCreated = false;
+
+function getdataLikeCom(tx){
+ 	
+   var sqlLike = "SELECT * FROM t_like ";
+   var sqlComment = "SELECT * FROM t_comment";
+  
+   tx.executeSql(sqlLike, [], getLike_success);
+  
+   	tx.executeSql(sqlComment, [], getCom_success);
+   
+ }
+  
+ function transaction_errorLikeCom(tx, error) {
+  alert("Database Error: " + error);
+ }
+ var like;
+ var com;
+ function getLike_success(tx, results){
+	 
+	 var len = results.rows.length;
+	 for (var i = 0; i < len; i++){
+    
+    	 like = results.rows.item(i);
+    	alert(like.date_like);
+     }
+	 }
+	 function getCom_success(tx, results){
+	 
+	 var len = results.rows.length;
+	 for (var i = 0; i < len; i++){
+    
+    	 var com = results.rows.item(i);
+    	alert(com.commentaire);
+     }
+	 }
+ var dbLikeCom;
+ var dbCreatedLikeCom = false;
 // document.addEventListener("deviceready", onDeviceReady, false);
     function synchroData(){
+    	dbLikeCom = window.openDatabase("db_e_adv", "1.0", "db_e_adv", 2000000);
+		  if (dbCreatedLikeCom)
+		   {
+		       // created
+		   }
+		   
+		  else{
+			  dbLikeCom.transaction(getdataLikeCom, transaction_errorLikeCom);
+		  }
+		 
+    	 
     	$.mobile.loader.prototype.options.text = "loading";
     	  $.mobile.loader.prototype.options.textVisible = false;
     	  $.mobile.loader.prototype.options.theme = "a";
@@ -174,6 +221,7 @@ var dbCreated = false;
 	
 	
 	}
+	
 // 
 	// }
 // 	
@@ -243,7 +291,27 @@ var dbCreated = false;
 			  + "PRIMARY KEY (id_user,id_role), "
 			  + "constraint fkUser FOREIGN KEY (id_user) references user(id_user), "
 			  + "constraint fkRole FOREIGN KEY (id_role) references role(id_role)) ";
-			  
+		var SqlStringComment = "CREATE TABLE IF NOT EXISTS t_comment("
+			  + "id_com integer AUTO_INCREMENT PRIMARY KEY,"
+			  + "num_page int(11) NOT NULL,"
+			  + "date_com datetime NOT NULL,"
+			  + "commentaire text NOT NULL,"
+			  + "nom_medecin varchar(100),"
+			  + "id_user int(11) NOT NULL,"
+			  + "id_file int(11) NOT NULL,"
+			  + "constraint fk_user FOREIGN KEY (id_user) references user(id_user),"
+			  + "constraint fk_file FOREIGN KEY (id_file) references tbl_uploads(id_file))";
+		tx.executeSql(SqlStringComment);
+		var SqlStringLike = "CREATE TABLE IF NOT EXISTS t_like("
+				  + "id_like integer AUTO_INCREMENT PRIMARY KEY,"
+				  + "num_page int(11) NOT NULL,"
+				  + "date_like datetime NOT NULL,"
+				  + "nom_medecin varchar(100),"
+				  + "id_user int(11) NOT NULL,"
+				  + "id_file int(11) NOT NULL,"
+				  + "constraint fk_user FOREIGN KEY (id_user) references user(id_user),"
+				  + "constraint fk_file FOREIGN KEY (id_file) references tbl_uploads(id_file))";
+		tx.executeSql(SqlStringLike);
 		tx.executeSql(SqlStringUser);
 		tx.executeSql('DROP TABLE IF EXISTS produit');
 		tx.executeSql(SqlStringProduit);
@@ -280,11 +348,13 @@ var dbCreated = false;
 			  
 				 tx.executeSql("INSERT INTO attr_role_user (id_user,id_role) VALUES ('"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).attr_role_user[o].id_user +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).attr_role_user[o].id_role +"' )");
 			   }
-		  
+			   
 	 }
 
 function transaction_error(tx, error) {
- alert("Database Error: " + error);
+	$.mobile.loading( "hide" );
+	alert("Database Error: " + error);
+ 
 }
 
 function populateDB_success() {
