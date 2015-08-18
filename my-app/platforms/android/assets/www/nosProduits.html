@@ -50,12 +50,40 @@
 		   
 		   var sql = "select * from produit";
 		   tx.executeSql(sql, [], getProduct_success);
+		   //tx.executeSql('DROP TABLE IF EXISTS t_medecin');
+		   var sqlStringMedecin="CREATE TABLE IF NOT EXISTS t_medecin("
+				+ "id_medecin integer primary key autoincrement,"
+				+ "date_insertMedecin datetime NOT NULL,"
+				+ "nom_medecin varchar(100))";
+				tx.executeSql(sqlStringMedecin);
+				var dateC;
+				dateC = new Date();
+				dateC = dateC.getUTCFullYear() + '-' +
+		    ('00' + (dateC.getUTCMonth()+1)).slice(-2) + '-' +
+		    ('00' + dateC.getUTCDate()).slice(-2) + ' ' + 
+		    ('00' + dateC.getUTCHours()).slice(-2) + ':' + 
+		    ('00' + dateC.getUTCMinutes()).slice(-2) + ':' + 
+		    ('00' + dateC.getUTCSeconds()).slice(-2);
+		    
+				tx.executeSql("INSERT INTO t_medecin (date_insertMedecin,nom_medecin) VALUES ('"+ dateC + "' , '"+ sessionStorage.getItem("nomMedecin") +"' )");
+// 				var sqlStringSelectMedecin="select * from t_medecin";
+// 				tx.executeSql(sqlStringSelectMedecin, [], getMedecin_success);
 		 }
 		  
 		 function transaction_errorProduct(tx, error) {
 		  alert("Database Error: " + error);
 		 }
-		 
+// 		 function getMedecin_success(tx, results){
+// 			 var len = results.rows.length;
+// 			 for (var i = 0; i < len; i++){
+				    
+// 		    	 var medecin = results.rows.item(i);
+// 		    	 alert(medecin.id_medecin);
+// 		    	 alert(medecin.date_insertMedecin);
+// 		    	 alert(medecin.nom_medecin);
+		    	 
+// 		     }
+// 		 }
 		 function getProduct_success(tx, results){
 			 
 			 var len = results.rows.length;
@@ -128,6 +156,8 @@ function getdataLikeCom(tx){
  var com;
  var jsonString;
  var jsonObj;
+ var names_Array = new Array;
+var jsString;
  function getLike_success(tx, results){
 	 
 	 var len = results.rows.length;
@@ -136,12 +166,14 @@ function getdataLikeCom(tx){
     	 like = results.rows.item(i);
     	 //jsonString = "{\"date_like\":\" "+like.date_like+" \"}";
     	jsonObj = {'id_like':like.id_like,'num_page':like.num_page,'date_like':like.date_like,'nom_medecin':like.nom_medecin,'id_user':like.id_user,'id_file':like.id_file};
+//myArray.push({'test' : jsonObj});
 
-    	 //jsonObj = JSON.parse(jsonString);
-    	// alert(JSON.stringify(jsonObj));
+    	 // jsonObj = JSON.parse(jsonString);
+    
+    	 // alert(JSON.stringify(jsonObj));
      }
 	 
-	alert(JSON.stringify(jsonObj));
+	//alert(myArray);
 	}
 	 function getCom_success(tx, results){
 	 
@@ -299,8 +331,8 @@ function getdataLikeCom(tx){
 			  + "PRIMARY KEY (id_user,id_role), "
 			  + "constraint fkUser FOREIGN KEY (id_user) references user(id_user), "
 			  + "constraint fkRole FOREIGN KEY (id_role) references role(id_role)) ";
-		tx.executeSql('DROP TABLE IF EXISTS t_comment');
-		tx.executeSql('DROP TABLE IF EXISTS t_like');
+		// tx.executeSql('DROP TABLE IF EXISTS t_comment');
+		// tx.executeSql('DROP TABLE IF EXISTS t_like');
 		var SqlStringComment = "CREATE TABLE IF NOT EXISTS t_comment("
 			  + "id_com integer primary key autoincrement,"
 			  + "num_page int(11) NOT NULL,"
@@ -321,6 +353,7 @@ function getdataLikeCom(tx){
 				  + "id_file int(11) NOT NULL,"
 				  + "constraint fk_user FOREIGN KEY (id_user) references user(id_user),"
 				  + "constraint fk_file FOREIGN KEY (id_file) references tbl_uploads(id_file))";
+		
 		tx.executeSql(SqlStringLike);
 		tx.executeSql(SqlStringUser);
 		tx.executeSql('DROP TABLE IF EXISTS produit');

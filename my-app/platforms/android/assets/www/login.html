@@ -38,6 +38,9 @@
 			  } else if (document.mylogin.psw.value == "") {
 			   alert("Veuillez entrer votre mot de passe");
 			   document.mylogin.psw.focus();
+			  } else if (document.mylogin.medecinName.value == ""){
+			  	alert("Veuillez entrer le nom de medecin");
+			   document.mylogin.medecinName.focus();
 			  }
 			  else
 			   {
@@ -54,6 +57,7 @@
 			 var dbCreated = false;
 			  
 			 function doLogin(){
+				 
 			 db = window.openDatabase("db_e_adv", "1.0", "db_e_adv", 2000000);
 			  if (dbCreated)
 			   {
@@ -66,11 +70,12 @@
 			 }
 			 
 			 function getregistdata(tx){
-			   
+			  
 			   var sql = "select u.id_user, u.email, u.password, at_r_u.id_role from user u, role r, attr_role_user at_r_u"
 				  +" where at_r_u.id_user=u.id_user"
 				  +" and at_r_u.id_role=r.id_role"
 				  +" and at_r_u.id_role=2";
+			  
 			   tx.executeSql(sql, [], getlogin_success);
 			 }
 			  
@@ -84,6 +89,7 @@
 				 var len = results.rows.length;
 				 var email=document. getElementById("email").value;
 			     var password=document. getElementById("psw").value;
+			     var nom_medecin=document. getElementById("medecinName").value;
 			     while (j<len){
 			    	 user = results.rows.item(j);
 			    	 var uemail=user.email;
@@ -92,6 +98,7 @@
 				     if(email==uemail && password==pasw){
 				    	 j=len;
 				    	 sessionStorage.setItem("idUser",idUser);
+				    	 sessionStorage.setItem("nomMedecin",nom_medecin);
 					     sessionStorage.setItem("email",email);
 					     sessionStorage.setItem("password",password);
 					     
@@ -127,7 +134,11 @@ function gotoSynchronizedata(){
    </div>
    <div class="psw" data-role="fieldcontain">
    <input name="password" id="psw"
-     placeholder="Mot de passe" value="" type="text">
+     placeholder="Mot de passe" value="" type="password">
+   </div>
+   <div class="username" data-role="fieldcontain">
+   <input name="medecinName" id="medecinName"
+     placeholder="Medecin" value="" type="text">
    </div>
     <input id="login" value="Login" type="button" name="Login" onclick="validationcheck();">
     <input id="synchro" value="go to Synchronize data" type="button" name="synchro" onclick="gotoSynchronizedata();">
