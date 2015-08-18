@@ -67,7 +67,7 @@
 			 
 			 function getregistdata(tx){
 			   
-			   var sql = "select u.email, u.password, at_r_u.id_role from user u, role r, attr_role_user at_r_u"
+			   var sql = "select u.id_user, u.email, u.password, at_r_u.id_role from user u, role r, attr_role_user at_r_u"
 				  +" where at_r_u.id_user=u.id_user"
 				  +" and at_r_u.id_role=r.id_role"
 				  +" and at_r_u.id_role=2";
@@ -85,14 +85,16 @@
 				 var email=document. getElementById("email").value;
 			     var password=document. getElementById("psw").value;
 			     while (j<len){
-			    	 var user = results.rows.item(j);
+			    	 user = results.rows.item(j);
 			    	 var uemail=user.email;
 				     var pasw=user.password;
+				     var idUser=user.id_user;
 				     if(email==uemail && password==pasw){
 				    	 j=len;
-				    	 sessionStorage.setItem("idUser",user.id_user);
+				    	 sessionStorage.setItem("idUser",idUser);
 					     sessionStorage.setItem("email",email);
 					     sessionStorage.setItem("password",password);
+					     
 				    	 alert("Login Success");
 					      
 					      

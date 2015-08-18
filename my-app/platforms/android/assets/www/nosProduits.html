@@ -126,15 +126,23 @@ function getdataLikeCom(tx){
  }
  var like;
  var com;
+ var jsonString;
+ var jsonObj;
  function getLike_success(tx, results){
 	 
 	 var len = results.rows.length;
 	 for (var i = 0; i < len; i++){
     
     	 like = results.rows.item(i);
-    	alert(like.date_like);
+    	 //jsonString = "{\"date_like\":\" "+like.date_like+" \"}";
+    	jsonObj = {'id_like':like.id_like,'num_page':like.num_page,'date_like':like.date_like,'nom_medecin':like.nom_medecin,'id_user':like.id_user,'id_file':like.id_file};
+
+    	 //jsonObj = JSON.parse(jsonString);
+    	// alert(JSON.stringify(jsonObj));
      }
-	 }
+	 
+	alert(JSON.stringify(jsonObj));
+	}
 	 function getCom_success(tx, results){
 	 
 	 var len = results.rows.length;
@@ -291,8 +299,10 @@ function getdataLikeCom(tx){
 			  + "PRIMARY KEY (id_user,id_role), "
 			  + "constraint fkUser FOREIGN KEY (id_user) references user(id_user), "
 			  + "constraint fkRole FOREIGN KEY (id_role) references role(id_role)) ";
+		tx.executeSql('DROP TABLE IF EXISTS t_comment');
+		tx.executeSql('DROP TABLE IF EXISTS t_like');
 		var SqlStringComment = "CREATE TABLE IF NOT EXISTS t_comment("
-			  + "id_com integer AUTO_INCREMENT PRIMARY KEY,"
+			  + "id_com integer primary key autoincrement,"
 			  + "num_page int(11) NOT NULL,"
 			  + "date_com datetime NOT NULL,"
 			  + "commentaire text NOT NULL,"
@@ -303,7 +313,7 @@ function getdataLikeCom(tx){
 			  + "constraint fk_file FOREIGN KEY (id_file) references tbl_uploads(id_file))";
 		tx.executeSql(SqlStringComment);
 		var SqlStringLike = "CREATE TABLE IF NOT EXISTS t_like("
-				  + "id_like integer AUTO_INCREMENT PRIMARY KEY,"
+				  + "id_like integer primary key autoincrement,"
 				  + "num_page int(11) NOT NULL,"
 				  + "date_like datetime NOT NULL,"
 				  + "nom_medecin varchar(100),"

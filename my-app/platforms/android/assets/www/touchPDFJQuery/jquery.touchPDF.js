@@ -94,8 +94,8 @@ function populateDB(tx) {
     ('00' + date.getUTCSeconds()).slice(-2);
 
 		var nom_medecin="";
-		
-			 tx.executeSql("INSERT INTO t_like (num_page,date_like,nom_medecin,id_user,id_file) VALUES ('"+ sessionStorage.getItem("pageNum") +"','"+ date +"' , '"+ nom_medecin +"', '"+ sessionStorage.getItem("idUser") +"','"+ sessionStorage.getItem("idFile") +"' )");
+		var iduser=sessionStorage.getItem("idUser");
+			 tx.executeSql("INSERT INTO t_like (num_page,date_like,nom_medecin,id_user,id_file) VALUES ('"+ sessionStorage.getItem("pageNum") +"','"+ date +"' , '"+ nom_medecin +"', '"+ iduser +"','"+ sessionStorage.getItem("idFile") +"' )");
 		    
 	 }
 
