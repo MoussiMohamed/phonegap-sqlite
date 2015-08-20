@@ -51,7 +51,7 @@ function CpopulateDB(tx) {
     ('00' + dateC.getUTCMinutes()).slice(-2) + ':' + 
     ('00' + dateC.getUTCSeconds()).slice(-2);
 
-		var nom_medecin="";
+		var nom_medecin=sessionStorage.getItem("nomMedecin");
 		var commentaire=document.getElementById('commentText').value;
 		
 			 tx.executeSql("INSERT INTO t_comment (num_page,date_com,commentaire,nom_medecin,id_user,id_file) VALUES ('"+ sessionStorage.getItem("pageNum") + "' , '"+ dateC+ "' , '" +commentaire +"' , '"+ nom_medecin +"', '"+ sessionStorage.getItem("idUser") +"','"+ sessionStorage.getItem("idFile") +"' )");
@@ -93,7 +93,7 @@ function populateDB(tx) {
     ('00' + date.getUTCMinutes()).slice(-2) + ':' + 
     ('00' + date.getUTCSeconds()).slice(-2);
 
-		var nom_medecin="";
+		var nom_medecin=sessionStorage.getItem("nomMedecin");
 		var iduser=sessionStorage.getItem("idUser");
 			 tx.executeSql("INSERT INTO t_like (num_page,date_like,nom_medecin,id_user,id_file) VALUES ('"+ sessionStorage.getItem("pageNum") +"','"+ date +"' , '"+ nom_medecin +"', '"+ iduser +"','"+ sessionStorage.getItem("idFile") +"' )");
 		    
@@ -400,6 +400,37 @@ alert("success like");
 			});
 		}
 		
+		var dbStat;
+		var dbCreatedStat = false;
+		 function doSaveStatistic() {
+    	
+		  
+		dbStat = window.openDatabase("db_e_adv", "1.0", "db_e_adv", 2000000);
+		  if (dbCreatedStat)
+		   {
+		       // created
+		   }
+		   
+		  else{
+	  dbStat.transaction(populateDBStat, transaction_errorStat, populateDB_successStat);
+	 	}
+}
+function populateDBStat(tx) {
+		
+			 tx.executeSql("INSERT INTO t_statistique (date_visite,nbr_visite,temps_passe,id_file) VALUES ('"+ getDateVisite() +"','"+ nbvisite +"' , '"+ stop() +"', '"+ sessionStorage.getItem("idFile") +"' )");
+		    
+	 }
+
+function transaction_errorStat(tx, error) {
+ alert("Database Error: " + error);
+}
+
+function populateDB_successStat() {
+ dbCreatedStat = true;
+alert("success Stat");
+ 
+}
+		
 		function initDom() {
 			if (state != EMPTY) return;
 			$element.addClass("touchPDF").html(
@@ -418,14 +449,15 @@ alert("success like");
 			if (options.showToolbar) {
 				
 				$element.find(".pdf-toolbar").html(
-					'<div class="pdf-title">'+options.title+'</div>'
+					'<div style="width: 100px !important"class="pdf-title">'+options.title+'</div>'
 					+ '<div class="pdf-button"><button id="btnAimer" class="pdf-like">Aimer</button></div>'
 					+ '<div class="pdf-button"><a href="#popupLogin" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="c" aria-haspopup="true" aria-owns="#popupLogin" ><span ><button class="pdf-comment">Commenter</button></span></a></div>'
 				 	+ '<div class="pdf-button"><button class="pdf-prev">&lt;</button></div>'
 				 	+ '<div class="pdf-button"><span class="pdf-page-count"></span></div>'
 				 	+ '<div class="pdf-button"><button class="pdf-next">&gt;</button></div>'
 				 	+ (options.disableZoom? '':'<div class="pdf-button"><button class="pdf-zoomin">+</button></div>'
-				 		+ '<div class="pdf-button"><button class="pdf-zoomout">-</button></div>')
+				 		+ '<div class="pdf-button"><button class="pdf-zoomout">-</button></div>'
+				 		+ '<div class="pdf-button"><button class="pdf-terminer">Terminer</button></div>')
 				 	);
 				$element.find(".pdf-toolbar > .pdf-button > .pdf-like").on("click", function() {
 					sessionStorage.setItem("pageNum",pageNum);
@@ -435,6 +467,10 @@ alert("success like");
 				});
 				$element.find(".pdf-toolbar > .pdf-button > .pdf-comment").on("click", function() {
 					
+				});
+				$element.find(".pdf-toolbar > .pdf-button > .pdf-terminer").on("click", function() {
+					alert("here");
+					doSaveStatistic();
 				});
 				$element.find(".pdf-toolbar > .pdf-title").on("click", function() {
 					goto(1);
