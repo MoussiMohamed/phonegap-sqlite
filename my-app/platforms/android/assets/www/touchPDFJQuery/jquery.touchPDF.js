@@ -55,7 +55,7 @@ function CpopulateDB(tx) {
 		var commentaire=document.getElementById('commentText').value;
 		
 			 tx.executeSql("INSERT INTO t_comment (num_page,date_com,commentaire,nom_medecin,id_user,id_file) VALUES ('"+ sessionStorage.getItem("pageNum") + "' , '"+ dateC+ "' , '" +commentaire +"' , '"+ nom_medecin +"', '"+ sessionStorage.getItem("idUser") +"','"+ sessionStorage.getItem("idFile") +"' )");
-			 
+			
 	 }
 
 function Ctransaction_error(tx, error) {
@@ -66,9 +66,7 @@ function CpopulateDB_success() {
  dbCreated = true;
 alert("success comment");
 
- 
 }
-
 
 var db;
 var dbCreated = false;
@@ -366,9 +364,6 @@ alert("success like");
 			return totalPages;
 		};
 		
-		
-		
-
 		//
 		// Private methods
 		//
@@ -402,9 +397,8 @@ alert("success like");
 		
 		var dbStat;
 		var dbCreatedStat = false;
+		var nbvisite = 1;
 		 function doSaveStatistic() {
-    	
-		  
 		dbStat = window.openDatabase("db_e_adv", "1.0", "db_e_adv", 2000000);
 		  if (dbCreatedStat)
 		   {
@@ -418,7 +412,7 @@ alert("success like");
 function populateDBStat(tx) {
 		
 			 tx.executeSql("INSERT INTO t_statistique (date_visite,nbr_visite,temps_passe,id_file) VALUES ('"+ getDateVisite() +"','"+ nbvisite +"' , '"+ stop() +"', '"+ sessionStorage.getItem("idFile") +"' )");
-		    
+			 
 	 }
 
 function transaction_errorStat(tx, error) {
@@ -469,7 +463,7 @@ alert("success Stat");
 					
 				});
 				$element.find(".pdf-toolbar > .pdf-button > .pdf-terminer").on("click", function() {
-					alert("here");
+					
 					doSaveStatistic();
 				});
 				$element.find(".pdf-toolbar > .pdf-title").on("click", function() {

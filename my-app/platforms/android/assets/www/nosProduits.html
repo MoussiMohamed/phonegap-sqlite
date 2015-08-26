@@ -71,21 +71,11 @@
 // 				var sqlStringSelectMedecin="select * from t_medecin";
 // 				tx.executeSql(sqlStringSelectMedecin, [], getMedecin_success);
 		 }
-		  
+		 
 		 function transaction_errorProduct(tx, error) {
 		  alert("Database Error: " + error);
 		 }
-// 		 function getMedecin_success(tx, results){
-// 			 var len = results.rows.length;
-// 			 for (var i = 0; i < len; i++){
-				    
-// 		    	 var medecin = results.rows.item(i);
-// 		    	 alert(medecin.id_medecin);
-// 		    	 alert(medecin.date_insertMedecin);
-// 		    	 alert(medecin.nom_medecin);
-		    	 
-// 		     }
-// 		 }
+		 
 		 function getProduct_success(tx, results){
 			 
 			 var len = results.rows.length;
@@ -191,10 +181,9 @@ updReq = getXMLHttp();
        
         updReq.onreadystatechange = function() {//Call a function when the state changes.
                 if(updReq.readyState == 4 && updReq.status == 200) {
-alert(updReq.responseText);
+//alert(updReq.responseText);
 
 
-   
     }
         }
         updReq.send(vars);
@@ -258,10 +247,8 @@ updReq = getXMLHttp();
        
         updReq.onreadystatechange = function() {//Call a function when the state changes.
                 if(updReq.readyState == 4 && updReq.status == 200) {
-alert(updReq.responseText);
+//alert(updReq.responseText);
 
-
-   
     }
         }
         updReq.send(vars);
@@ -306,10 +293,8 @@ updReq = getXMLHttp();
        
         updReq.onreadystatechange = function() {//Call a function when the state changes.
                 if(updReq.readyState == 4 && updReq.status == 200) {
-alert(updReq.responseText);
+//alert(updReq.responseText);
 
-
-   
     }
         }
         updReq.send(vars);
@@ -354,6 +339,7 @@ alert(updReq.responseText);
 					responseVal=jsonArray.d[i].file;
 						urlFile=filesPath+responseVal;
 			    	      var fileSystemPath = fs.root.toURL() + responseVal; // full file path
+			    	      
 			    	      fileTransfer.download(urlFile, fileSystemPath, function (entry) {
 			    	               console.log(entry.fullPath); // entry is fileEntry object
 			    	      }, function (error) {
@@ -383,44 +369,13 @@ alert(updReq.responseText);
 	 else{
 	  db.transaction(populateDB, transaction_error, populateDB_success);
 	 	 }
-	 	 
-	 	 
-		
-		//for (var i = 0; i < responseData.user.length - 1; i++) {
-// 			alert(jsonArrayForDB.user[1].id_user);
-		//}
+
 	}
 
 	});
 	
-	
-	
 	}
 	
-// 
-	// }
-// 	
-// 	function populateDB(tx) {
-// 	tx.executeSql('DROP TABLE IF EXISTS user');
-// var SqlStringUser = "CREATE TABLE IF NOT EXISTS user ("
-//   + "id_user int(11) NOT NULL, "
-//   + "name varchar(50) NOT NULL, "
-//   + "surname varchar(50) NOT NULL, "
-//   + "email varchar(60) NOT NULL, "
-//   + "password varchar(50) NOT NULL, "
-//   + "dateInsert datetime DEFAULT NULL, "
-//   + "PRIMARY KEY (id_user)) ";
- 
-//   tx.executeSql(SqlStringUser);
-//  for (var i = 0; i < jsonArrayForDb.user.length - 1; i++) {
-			
-// 		}
-// 		alert(jsonArrayForDb.user[1].id_user);
-//  tx.executeSql("INSERT INTO Registration (firstname,lastname,age,username,password) VALUES ('"+ fname +"','"+ lname +"' , "+ age+", '"+ uname +"','"+ pwrd +"' )");
-  
-// }
-
-
 	function populateDB(tx) {
 		tx.executeSql('DROP TABLE IF EXISTS user');
 		var SqlStringUser = "CREATE TABLE IF NOT EXISTS user ("

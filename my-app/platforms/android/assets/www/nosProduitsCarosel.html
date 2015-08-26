@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>Nos Produits</title>
+ 
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+
+
+     <script type="text/javascript" src="cordova.js"></script>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script> 
+      <!-- Important Owl stylesheet -->
+    <link rel="stylesheet" href="owl-carousel/owl.carousel.css">
+     
+    <!-- Default Theme -->
+    <link rel="stylesheet" href="owl-carousel/owl.theme.css">
+     
+    <!-- Include js plugin -->
+    <script src="owl-carousel/owl.carousel.js"></script>
+   
+	</head>
+
+	<body>
+		
+		<div>
+			 <div data-role="header">
+  <a href="index.html" class="ui-btn ui-icon-home ui-btn-icon-left ">Home</a>
+  <h1>Nos Produits</h1>
+  <a href="#" class="ui-btn ui-icon-info ui-btn-icon-left">A propos</a>
+</div>
+<style>
+	
+
+    #owl-produit .item{
+        background: #42bdc2;
+        padding: 30px 0px;
+        margin: 5px;
+        color: #FFF;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        text-align: center;
+    }
+
+
+</style>
+    <div id="owl-produit" class="owl-carousel owl-theme">
+  
+</div>
+
+		<script type="text/javascript" charset="utf-8">
+    $(document).ready(function () {
+        document.addEventListener("deviceready", onDeviceReady, true); 
+    });
+
+    function onDeviceReady() {
+    	  
+            
+     
+            //responsive code begin
+            //you can remove responsive code if you don't want the slider scales while window resizes
+            
+            //responsive code end
+    	var db;
+		var dbCreated = false;
+// 		  
+		db = window.openDatabase("db_e_adv", "1.0", "db_e_adv", 2000000);
+		  if (dbCreated)
+		   {
+		       // created
+		   }
+		   
+		  else{
+		  db.transaction(getdataProduct, transaction_errorProduct);
+		  }
+		  
+		 }
+		 
+		 function getdataProduct(tx){
+		   
+		   var sql = "select * from produit";
+		   tx.executeSql(sql, [], getProduct_success);
+		   //tx.executeSql('DROP TABLE IF EXISTS t_medecin');
+		   var sqlStringMedecin="CREATE TABLE IF NOT EXISTS t_medecin("
+				+ "id_medecin integer primary key autoincrement,"
+				+ "date_insertMedecin datetime NOT NULL,"
+				+ "nom_medecin varchar(100))";
+				tx.executeSql(sqlStringMedecin);
+				var dateC;
+				dateC = new Date();
+				dateC = dateC.getUTCFullYear() + '-' +
+		    ('00' + (dateC.getUTCMonth()+1)).slice(-2) + '-' +
+		    ('00' + dateC.getUTCDate()).slice(-2) + ' ' + 
+		    ('00' + dateC.getUTCHours()).slice(-2) + ':' + 
+		    ('00' + dateC.getUTCMinutes()).slice(-2) + ':' + 
+		    ('00' + dateC.getUTCSeconds()).slice(-2);
+		    
+				tx.executeSql("INSERT INTO t_medecin (date_insertMedecin,nom_medecin) VALUES ('"+ dateC + "' , '"+ sessionStorage.getItem("nomMedecin") +"' )");
+// 				var sqlStringSelectMedecin="select * from t_medecin";
+// 				tx.executeSql(sqlStringSelectMedecin, [], getMedecin_success);
+		 }
+		  
+		 function transaction_errorProduct(tx, error) {
+		  alert("Database Error: " + error);
+		 }
+// 		 function getMedecin_success(tx, results){
+// 			 var len = results.rows.length;
+// 			 for (var i = 0; i < len; i++){
+				    
+// 		    	 var medecin = results.rows.item(i);
+// 		    	 alert(medecin.id_medecin);
+// 		    	 alert(medecin.date_insertMedecin);
+// 		    	 alert(medecin.nom_medecin);
+		    	 
+// 		     }
+// 		 }
+		 function getProduct_success(tx, results){
+			 var len = results.rows.length;
+			 var owl = $("#owl-produit");
+ 
+  
+			 for (var i = 0; i < len; i++){
+		    
+		    	 var user = results.rows.item(i);
+		    	 
+
+ $('div#owl-produit').append(
+							'<div class="item" style="opacity: 0.7;"  onclick="doSaveIdPdToShowContent(this)" value="'+user.id_Produit+'" ><h1>'
+								+ user.nom_Produit + '</h1></div>');
+
+
+		    	/* $('ul#contentList').append(
+							'<li style="opacity: 0.7;"  data-transition="slide" onclick="doSaveIdPdToShowContent(this)" value="'+user.id_Produit+'" ><a href="" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'
+								+ user.nom_Produit + '</a></li>');*/
+	   
+		     }
+			 
+			 owl.owlCarousel({
+			     
+			      itemsCustom : [
+			        [0, 2],
+			        [450, 4],
+			        [600, 7],
+			        [700, 9],
+			        [1000, 10],
+			        [1200, 12],
+			        [1400, 13],
+			        [1600, 15]
+			      ],
+			      navigation : true
+			 
+			  });
+			 
+			 }
+// 			$.ajax({ // create an ajax request to load_page.php
+// 				type : "POST",
+// 				url : "http://www.eventek-tn.com/test/E-adv/server/listProduct.php",
+// 				dataType : "json", // expect json to be returned
+// 				//data : data,
+// 				success : function(response) {
+
+// 					for (var i = 0; i < response.d.length - 1; i++) {
+// 						$('ul#contentList').append(
+// 								'<li onclick="doSaveIdPdToShowContent(this)" value="'+response.d[i].id_Produit+'" ><a href="" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'
+// 										+ response.d[i].nom_Produit + '</a></li>');
+// 					}
+// 				}
+// 			});
+    
+    
+    function doSaveIdPdToShowContent(idProduit){
+    	sessionStorage.setItem("idProd",idProduit.value);
+    	
+var child = idProduit.firstChild;
+var childval = child.innerHTML;
+sessionStorage.setItem("choixProduit",childval);
+    	window.open("choixPres_Article.html","_top");
+    }
+//     $( document ).on( "click", ".show-page-loading-msg", function() {
+        
+        
+//     })
+//     .on( "click", ".hide-page-loading-msg", function() {
+        
+//     });
+
+    var fileTransfer = new FileTransfer();
+		    	var filesPath = "http://eventek-tn.com/test/E-adv/file-uploading/uploads/";
+		    	var responseVal="";
+		    	var urlFile="";
+		    	var jsonArray="";
+		    	var jsonArrayForDB="jsonArrayForDB";
+var db;
+var dbCreated = false;
+
+function getdataLikeCom(tx){
+ 	
+   var sqlLike = "SELECT * FROM t_like ";
+   var sqlComment = "SELECT * FROM t_comment";
+  var sqlStat = "SELECT * FROM t_statistique ";
+   tx.executeSql(sqlLike, [], getLike_success);
+  
+   	tx.executeSql(sqlComment, [], getCom_success);
+   	
+   	tx.executeSql(sqlStat, [], getStat_success);
+   
+ }
+  
+ function transaction_errorLikeCom(tx, error) {
+  alert("Database Error: " + error);
+ }
+ var like;
+ var com;
+ var jsonObj;
+
+ function getLike_success(tx, results){
+	 var jsonObjLike;
+	 var len = results.rows.length;
+	 var arr = [];
+	 for (var i = 0; i < len; i++){
+    
+    	 like = results.rows.item(i);
+    	 
+    	 //jsonString = "{\"date_like\":\" "+like.date_like+" \"}";
+    	jsonObjLike = {'id_like':like.id_like,'num_page':like.num_page,'date_like':like.date_like,'nom_medecin':like.nom_medecin,'id_user':like.id_user,'id_file':like.id_file};
+//myArray.push({'test' : jsonObj});
+	arr.push(JSON.stringify(jsonObjLike));
+    	 // jsonObj = JSON.parse(jsonString);
+    
+    	 // alert(JSON.stringify(jsonObj));
+     }
+	 
+	doSendLikeData(arr);
+	}
+	function doSendLikeData(arrLike){
+	
+updReq = getXMLHttp();
+    // Create some variables we need to send to our PHP file
+    var url = "http://www.eventek-tn.com/test/E-adv/server/like.php";
+    var t="["+arrLike+"]";
+	updReq.open('POST', url, true);
+        updReq.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        var vars="LikeTable="+t;
+       
+        updReq.onreadystatechange = function() {//Call a function when the state changes.
+                if(updReq.readyState == 4 && updReq.status == 200) {
+alert(updReq.responseText);
+
+
+   
+    }
+        }
+        updReq.send(vars);
+    
+
+	}
+	 function getCom_success(tx, results){
+	 var jsonObjCom;
+	 var arr = [];
+	 var len = results.rows.length;
+	 for (var i = 0; i < len; i++){
+     var com = results.rows.item(i);
+    jsonObjCom = {'id_com':com.id_com,'num_page':com.num_page,'date_com':com.date_com,'commentaire':com.commentaire,'nom_medecin':com.nom_medecin,'id_user':com.id_user,'id_file':com.id_file};
+//myArray.push({'test' : jsonObj});
+	arr.push(JSON.stringify(jsonObjCom));
+
+     }
+     
+     doSendCommentTable(arr);
+	 }
+	 function getXMLHttp()
+{
+  var xmlHttp
+
+  try
+  {
+    //Firefox, Opera 8.0+, Safari
+    xmlHttp = new XMLHttpRequest();
+  }
+  catch(e)
+  {
+    //Internet Explorer
+    try
+    {
+      xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+    }
+    catch(e)
+    {
+      try
+      {
+        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      catch(e)
+      {
+        alert("Your browser does not support AJAX!")
+        return false;
+      }
+    }
+  }
+  return xmlHttp;
+}
+	 function doSendCommentTable(commentTable){	 	
+
+updReq = getXMLHttp();
+    // Create some variables we need to send to our PHP file
+    var url = "http://www.eventek-tn.com/test/E-adv/server/commentaire.php";
+    var t="["+commentTable+"]";
+	updReq.open('POST', url, true);
+        updReq.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        var vars="CommentTable="+t;
+       
+        updReq.onreadystatechange = function() {//Call a function when the state changes.
+                if(updReq.readyState == 4 && updReq.status == 200) {
+alert(updReq.responseText);
+
+
+   
+    }
+        }
+        updReq.send(vars);
+    
+
+	 }
+ var dbLikeCom;
+ var dbCreatedLikeCom = false;
+
+ function getStat_success(tx, results){
+	 var jsonObjStat;
+	 var len = results.rows.length;
+	 var arr = [];
+	 
+	 for (var i = 0; i < len; i++){
+    
+    	var
+    	 stat = results.rows.item(i);
+    	 
+    	 //jsonString = "{\"date_like\":\" "+like.date_like+" \"}";
+    	jsonObjStat = {'id_statistique':stat.id_statistique,'date_visite':stat.date_visite,'nbr_visite':stat.nbr_visite,'temps_passe':stat.temps_passe,'id_file':stat.id_file};
+//myArray.push({'test' : jsonObj});
+	arr.push(JSON.stringify(jsonObjStat));
+    	 // jsonObj = JSON.parse(jsonString);
+    
+    	 // alert(JSON.stringify(jsonObj));
+     }
+	 
+	doSendStatData(arr);
+	}
+ function doSendStatData(arrStat)
+ {
+ 	
+updReq = getXMLHttp();
+    // Create some variables we need to send to our PHP file
+    var url = "http://eventek-tn.com/test/E-adv/server/saveStat.php";
+    var t="["+arrStat+"]";
+    
+	updReq.open('POST', url, true);
+        updReq.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        var vars="statisticTable="+t;
+       
+        updReq.onreadystatechange = function() {//Call a function when the state changes.
+                if(updReq.readyState == 4 && updReq.status == 200) {
+alert(updReq.responseText);
+
+
+   
+    }
+        }
+        updReq.send(vars);
+   
+ }
+ 
+ 
+// document.addEventListener("deviceready", onDeviceReady, false);
+    function synchroData(){
+    	dbLikeCom = window.openDatabase("db_e_adv", "1.0", "db_e_adv", 2000000);
+		  if (dbCreatedLikeCom)
+		   {
+		       // created
+		   }
+		   
+		  else{
+			  dbLikeCom.transaction(getdataLikeCom, transaction_errorLikeCom);
+		  }
+		  
+		  
+		 
+    	 
+    	$.mobile.loader.prototype.options.text = "loading";
+    	  $.mobile.loader.prototype.options.textVisible = false;
+    	  $.mobile.loader.prototype.options.theme = "a";
+    	  $.mobile.loader.prototype.options.html = "";
+    	  $.mobile.loading( "show", {
+    		  text: "Synchronizing...",
+    		  textVisible: true,
+    		  theme: "a",
+    		  html: ""
+    		});
+    	  $.ajax({ // create an ajax request to load_page.php
+			type : "POST",
+			url : "http://eventek-tn.com/test/E-adv/file-uploading/view.php",
+			dataType : "json", // expect json to be returned
+
+			success : function(response) {
+				jsonArray=response;
+					window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+						for (var i = 0; i < jsonArray.d.length - 1; i++) {
+					responseVal=jsonArray.d[i].file;
+						urlFile=filesPath+responseVal;
+			    	      var fileSystemPath = fs.root.toURL() + responseVal; // full file path
+			    	      fileTransfer.download(urlFile, fileSystemPath, function (entry) {
+			    	               console.log(entry.fullPath); // entry is fileEntry object
+			    	      }, function (error) {
+			    	               console.log("Some error");
+			    	      });
+			    	   }
+			    	   });
+				}
+		
+		});
+
+		$.ajax({ // create an ajax request to get all Data for synchronization
+			type : "POST",
+			url : "http://eventek-tn.com/test/E-adv/file-uploading/SychnronizeDB.php",
+			dataType : "json", // expect json to be returned
+
+	success : function(responseData) {
+// 	jsonArrayForDB=responseData;
+// 	parsedResult.ListaPermessi
+	sessionStorage.setItem("jsonArraySynchro", JSON.stringify(responseData));
+// 	sessionStorage.setItem("jsonArraySynchro",jsonArrayForDB);
+	 db = window.openDatabase("db_e_adv", "1.0", "db_e_adv", 2000000);
+	 if (dbCreated)
+	 {
+		 
+	 }
+	 else{
+	  db.transaction(populateDB, transaction_error, populateDB_success);
+	 	 }
+	 	 
+	 	 
+		
+		//for (var i = 0; i < responseData.user.length - 1; i++) {
+// 			alert(jsonArrayForDB.user[1].id_user);
+		//}
+	}
+
+	});
+	
+	
+	
+	}
+	
+// 
+	// }
+// 	
+// 	function populateDB(tx) {
+// 	tx.executeSql('DROP TABLE IF EXISTS user');
+// var SqlStringUser = "CREATE TABLE IF NOT EXISTS user ("
+//   + "id_user int(11) NOT NULL, "
+//   + "name varchar(50) NOT NULL, "
+//   + "surname varchar(50) NOT NULL, "
+//   + "email varchar(60) NOT NULL, "
+//   + "password varchar(50) NOT NULL, "
+//   + "dateInsert datetime DEFAULT NULL, "
+//   + "PRIMARY KEY (id_user)) ";
+ 
+//   tx.executeSql(SqlStringUser);
+//  for (var i = 0; i < jsonArrayForDb.user.length - 1; i++) {
+			
+// 		}
+// 		alert(jsonArrayForDb.user[1].id_user);
+//  tx.executeSql("INSERT INTO Registration (firstname,lastname,age,username,password) VALUES ('"+ fname +"','"+ lname +"' , "+ age+", '"+ uname +"','"+ pwrd +"' )");
+  
+// }
+
+
+	function populateDB(tx) {
+		tx.executeSql('DROP TABLE IF EXISTS user');
+		var SqlStringUser = "CREATE TABLE IF NOT EXISTS user ("
+		  + "id_user int(11) NOT NULL, "
+		  + "name varchar(50) NOT NULL, "
+		  + "surname varchar(50) NOT NULL, "
+		  + "email varchar(60) NOT NULL, "
+		  + "password varchar(50) NOT NULL, "
+		  + "dateInsert datetime DEFAULT NULL, "
+		  + "PRIMARY KEY (id_user)) ";
+		var SqlStringProduit = "CREATE TABLE IF NOT EXISTS produit ("
+			  + "id_Produit int(11) NOT NULL, "
+			  + "nom_Produit varchar(50) DEFAULT NULL, "
+			  + "date_Insertion datetime DEFAULT NULL, "
+			  + "date_Modification datetime DEFAULT NULL, "
+			  + "PRIMARY KEY (id_Produit)) ";
+		var SqlStringRole = "CREATE TABLE IF NOT EXISTS role ("
+			  + "id_role int(11) NOT NULL, "
+			  + "role_name varchar(30) DEFAULT NULL, "
+			  + "PRIMARY KEY (id_role)) ";
+		var SqlStringTbl_uploads = "CREATE TABLE IF NOT EXISTS tbl_uploads ("
+			  + "id_file int(11) NOT NULL, "
+			  + "file varchar(200) NOT NULL, "
+			  + "type varchar(10) NOT NULL, "
+			  + "datafile mediumblob NOT NULL, "
+			  + "size int(11) NOT NULL, "
+			  + "content_type varchar(20) DEFAULT NULL, "
+			  + "id_produit int(11) NOT NULL, "
+			  + "PRIMARY KEY (id_file), "
+			  + "constraint fk FOREIGN KEY (id_produit) references produit(id_produit)) ";
+		var SqlStringPrivilege = "CREATE TABLE IF NOT EXISTS privilege ("
+			  + "id_privilege int(11) NOT NULL, "
+			  + "privilege varchar(50) NOT NULL, "
+			  + "PRIMARY KEY (id_privilege)) ";
+		var SqlStringAttr_priv_role = "CREATE TABLE IF NOT EXISTS attr_priv_role ("
+			  + "id_role int(11) DEFAULT NULL, "
+			  + "id_privilege int(11) DEFAULT NULL, "
+			  + "PRIMARY KEY (id_role,id_privilege), "
+			  + "constraint fk_privilege FOREIGN KEY (id_privilege) references privilege(id_privilege)) ";
+		var SqlStringAttrib_role_user = "CREATE TABLE IF NOT EXISTS attr_role_user ("
+			  + "id_user int(11) not null DEFAULT '0', "
+			  + "id_role int(11) not null DEFAULT '0', "		
+			  + "PRIMARY KEY (id_user,id_role), "
+			  + "constraint fkUser FOREIGN KEY (id_user) references user(id_user), "
+			  + "constraint fkRole FOREIGN KEY (id_role) references role(id_role)) ";
+		// tx.executeSql('DROP TABLE IF EXISTS t_comment');
+		// tx.executeSql('DROP TABLE IF EXISTS t_like');
+		var SqlStringComment = "CREATE TABLE IF NOT EXISTS t_comment("
+			  + "id_com integer primary key autoincrement,"
+			  + "num_page int(11) NOT NULL,"
+			  + "date_com datetime NOT NULL,"
+			  + "commentaire text NOT NULL,"
+			  + "nom_medecin varchar(100),"
+			  + "id_user int(11) NOT NULL,"
+			  + "id_file int(11) NOT NULL,"
+			  + "constraint fk_user FOREIGN KEY (id_user) references user(id_user),"
+			  + "constraint fk_file FOREIGN KEY (id_file) references tbl_uploads(id_file))";
+		tx.executeSql(SqlStringComment);
+		var SqlStringLike = "CREATE TABLE IF NOT EXISTS t_like("
+				  + "id_like integer primary key autoincrement,"
+				  + "num_page int(11) NOT NULL,"
+				  + "date_like datetime NOT NULL,"
+				  + "nom_medecin varchar(100),"
+				  + "id_user int(11) NOT NULL,"
+				  + "id_file int(11) NOT NULL,"
+				  + "constraint fk_user FOREIGN KEY (id_user) references user(id_user),"
+				  + "constraint fk_file FOREIGN KEY (id_file) references tbl_uploads(id_file))";
+		//tx.executeSql('DROP TABLE IF EXISTS t_statistique');
+		var SqlStringStatistique = "CREATE TABLE IF NOT EXISTS t_statistique("
+				  + "id_statistique integer primary key autoincrement,"
+				  + "date_visite date NOT NULL,"
+				  + "nbr_visite int(11) NOT NULL,"
+				  + "temps_passe time NOT NULL,"
+				  + "id_file int(11) NOT NULL,"
+				  + "constraint fk_file FOREIGN KEY (id_file) references tbl_uploads(id_file))";
+		
+		tx.executeSql(SqlStringLike);
+		tx.executeSql(SqlStringStatistique);
+		tx.executeSql(SqlStringUser);
+		tx.executeSql('DROP TABLE IF EXISTS produit');
+		tx.executeSql(SqlStringProduit);
+		tx.executeSql('DROP TABLE IF EXISTS role');
+		tx.executeSql(SqlStringRole);
+		tx.executeSql('DROP TABLE IF EXISTS tbl_uploads');
+		tx.executeSql(SqlStringTbl_uploads);
+		tx.executeSql('DROP TABLE IF EXISTS privilege');
+		tx.executeSql(SqlStringPrivilege);
+		tx.executeSql('DROP TABLE IF EXISTS attr_priv_role');
+		tx.executeSql(SqlStringAttr_priv_role);
+		tx.executeSql('DROP TABLE IF EXISTS attr_role_user');
+		tx.executeSql(SqlStringAttrib_role_user);
+		 
+		  for (var i = 0; i < parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user.length - 1); i++) {
+			 tx.executeSql("INSERT INTO user (id_user,name,surname,email,password,dateInsert) VALUES ('"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].id_user +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].name +"' , '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].surname+"', '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].email +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].password +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].dateInsert +"' )");
+		   }
+		  for (var j = 0; j < parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).produit.length - 1); j++) {
+				 tx.executeSql("INSERT INTO produit (id_Produit,nom_Produit,date_Insertion,date_Modification) VALUES ('"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).produit[j].id_Produit +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).produit[j].nom_Produit +"' , '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).produit[j].date_Insertion+"', '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).produit[j].date_Modification +"' )");
+			   }
+		  for (var k = 0; k < parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).role.length - 1); k++) {
+				 tx.executeSql("INSERT INTO role (id_role,role_name) VALUES ('"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).role[k].id_role +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).role[k].role_name +"' )");
+			   }
+		  for (var l = 0; l < parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).tbl_uploads.length - 1); l++) {
+				 tx.executeSql("INSERT INTO tbl_uploads (id_file,file,type,datafile,size,content_type,id_produit) VALUES ('"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).tbl_uploads[l].id_file +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).tbl_uploads[l].file +"' , '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).tbl_uploads[l].type+"', '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).tbl_uploads[l].datafile +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).tbl_uploads[l].size +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).tbl_uploads[l].content_type+"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).tbl_uploads[l].id_produit +"' )");
+			   }
+		  for (var m = 0; m < parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).privilege.length - 1); m++) {
+				 tx.executeSql("INSERT INTO privilege (id_privilege,privilege) VALUES ('"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).privilege[m].id_privilege +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).privilege[m].privilege +"' )");
+			   }
+		  for (var n = 0; n < parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).attr_priv_role.length - 1); n++) {
+				 tx.executeSql("INSERT INTO attr_priv_role (id_role,id_privilege) VALUES ('"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).attr_priv_role[n].id_role +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).attr_priv_role[n].id_privilege +"' )");
+			   }
+		  for (var o = 0; o < parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).attr_role_user.length - 1); o++) {
+			  
+				 tx.executeSql("INSERT INTO attr_role_user (id_user,id_role) VALUES ('"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).attr_role_user[o].id_user +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).attr_role_user[o].id_role +"' )");
+			   }
+			   
+	 }
+
+function transaction_error(tx, error) {
+	$.mobile.loading( "hide" );
+	alert("Database Error: " + error);
+ 
+}
+
+function populateDB_success() {
+ dbCreated = true;
+ $.mobile.loading( "hide" );
+ alert("Data synchronized successfully");
+ 
+}
+	
+    </script>
+		
+		</div>
+		<div data-role="footer" data-position="fixed" data-fullscreen="true">
+			
+  <button onclick="synchroData()" data-textonly="false" data-textvisible="true" data-msgtext="" data-inline="true" class="show-page-loading-msg">Synchroniser les données</button>
+  </div>
+	</body>
+</html>

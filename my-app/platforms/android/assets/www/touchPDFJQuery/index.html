@@ -122,19 +122,10 @@ document.addEventListener("deviceready", doPDFPrepare, false);
     
     
 		$("#myPDF").pdf( {
-			
-			
-// 			source: fileSystemPath+sessionStorage.getItem("PDFFileName")
-// 			source: "../file-uploading/uploads/"+sessionStorage.getItem("filePDF")
-//sessionStorage.getItem("PDFFileName");
+
 source: sessionStorage.getItem("fileSystem")+sessionStorage.getItem("PDFFileName")
 		});
 	}
-	// $(function() {
-// 		
-// 		
-	// });
-	
 	
 				function getDateVisite(){
 				var d = new Date();
