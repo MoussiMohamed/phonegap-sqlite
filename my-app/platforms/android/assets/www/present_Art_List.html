@@ -63,10 +63,10 @@
 		 	var idP=sessionStorage.getItem("idProd");
 		 	
 		   var sqlPres = "SELECT * FROM tbl_uploads where id_produit="+idP
-		   +" and content_type='Presentation'";
+		   +" and content_type='E-ADV'";
 		   var sqlArt = "SELECT * FROM tbl_uploads where id_produit="+idP
 		   +" and content_type='Article'";
-		   if(sessionStorage.getItem("presentation_article") == "Presentation"){
+		   if(sessionStorage.getItem("presentation_article") == "E-ADV"){
 		   tx.executeSql(sqlPres, [], getPresArt_success);
 		   }else if(sessionStorage.getItem("presentation_article") == "Article"){
 		   	tx.executeSql(sqlArt, [], getPresArt_success);

@@ -111,6 +111,7 @@
 var child = idProduit.firstChild;
 var childval = child.innerHTML;
 sessionStorage.setItem("choixProduit",childval);
+
     	window.open("choixPres_Article.html","_top");
     }
 //     $( document ).on( "click", ".show-page-loading-msg", function() {
@@ -304,6 +305,7 @@ updReq = getXMLHttp();
  
 // document.addEventListener("deviceready", onDeviceReady, false);
     function synchroData(){
+    	
     	dbLikeCom = window.openDatabase("db_e_adv", "1.0", "db_e_adv", 2000000);
 		  if (dbCreatedLikeCom)
 		   {
@@ -311,7 +313,9 @@ updReq = getXMLHttp();
 		   }
 		   
 		  else{
+			  
 			  dbLikeCom.transaction(getdataLikeCom, transaction_errorLikeCom);
+			  
 		  }
 		  
 		  
@@ -327,19 +331,21 @@ updReq = getXMLHttp();
     		  theme: "a",
     		  html: ""
     		});
+    	  
     	  $.ajax({ // create an ajax request to load_page.php
 			type : "POST",
 			url : "http://eventek-tn.com/test/E-adv/file-uploading/view.php",
 			dataType : "json", // expect json to be returned
-
+			
 			success : function(response) {
+				
 				jsonArray=response;
 					window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
 						for (var i = 0; i < jsonArray.d.length - 1; i++) {
 					responseVal=jsonArray.d[i].file;
 						urlFile=filesPath+responseVal;
 			    	      var fileSystemPath = fs.root.toURL() + responseVal; // full file path
-			    	      
+			    	      alert(fileSystemPath);
 			    	      fileTransfer.download(urlFile, fileSystemPath, function (entry) {
 			    	               console.log(entry.fullPath); // entry is fileEntry object
 			    	      }, function (error) {
@@ -382,6 +388,9 @@ updReq = getXMLHttp();
 		  + "id_user int(11) NOT NULL, "
 		  + "name varchar(50) NOT NULL, "
 		  + "surname varchar(50) NOT NULL, "
+		  + "tel int(11), "
+		  + "fax varchar(50), "
+		  + "adresse varchar(50), "
 		  + "email varchar(60) NOT NULL, "
 		  + "password varchar(50) NOT NULL, "
 		  + "dateInsert datetime DEFAULT NULL, "
@@ -446,7 +455,7 @@ updReq = getXMLHttp();
 		//tx.executeSql('DROP TABLE IF EXISTS t_statistique');
 		var SqlStringStatistique = "CREATE TABLE IF NOT EXISTS t_statistique("
 				  + "id_statistique integer primary key autoincrement,"
-				  + "date_visite date NOT NULL,"
+				  + "date_visite datetime NOT NULL,"
 				  + "nbr_visite int(11) NOT NULL,"
 				  + "temps_passe time NOT NULL,"
 				  + "id_file int(11) NOT NULL,"
@@ -469,7 +478,7 @@ updReq = getXMLHttp();
 		tx.executeSql(SqlStringAttrib_role_user);
 		 
 		  for (var i = 0; i < parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user.length - 1); i++) {
-			 tx.executeSql("INSERT INTO user (id_user,name,surname,email,password,dateInsert) VALUES ('"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].id_user +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].name +"' , '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].surname+"', '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].email +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].password +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].dateInsert +"' )");
+			 tx.executeSql("INSERT INTO user (id_user,name,surname,tel,fax,adresse,email,password,dateInsert) VALUES ('"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].id_user +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].name +"' , '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].surname+"', '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].tel+"', '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].fax+"', '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].adresse+"', '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].email +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].password +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).user[i].dateInsert +"' )");
 		   }
 		  for (var j = 0; j < parseInt(JSON.parse(sessionStorage.getItem("jsonArraySynchro")).produit.length - 1); j++) {
 				 tx.executeSql("INSERT INTO produit (id_Produit,nom_Produit,date_Insertion,date_Modification) VALUES ('"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).produit[j].id_Produit +"','"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).produit[j].nom_Produit +"' , '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).produit[j].date_Insertion+"', '"+ JSON.parse(sessionStorage.getItem("jsonArraySynchro")).produit[j].date_Modification +"' )");
